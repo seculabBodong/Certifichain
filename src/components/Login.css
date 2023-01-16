@@ -1,0 +1,50 @@
+.App{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    overflow: hidden;
+}
+.appAside{
+    width: 30%;
+    /* display: flex; */
+    background-color: #1A120B;
+    /* position: absolute; */
+    z-index: 2;
+}
+.mainContainer{
+    margin-top: 20%;
+    width: 100%;
+    padding: 50px;
+    /* display: flex; */
+    flex-direction: column;
+    align-items: center;
+    color: #E5E5CB;
+}
+.textContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60%;
+    text-align: center;
+}
+.title{
+    font-size: 30px;
+    font-weight: bold;
+}
+.secondary{
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: lighter;
+}
+
+.appForm{
+    width: 70%;
+    background-color: #E5E5CB;
+    /* position: absolute; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    z-index: 2;
+}
