@@ -7,7 +7,7 @@
 }
 .appAside{
     width: 30%;
-    /* display: flex; */
+    display: flex;
     background-color: #1A120B;
     /* position: absolute; */
     z-index: 2;
