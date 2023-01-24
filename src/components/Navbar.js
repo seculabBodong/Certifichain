@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./Button";
-// import logoIcon from "";
+import logoIcon from "../assets/logoIcon.png";
 import "./Navbar.css";
 
 function Navbar() {
@@ -25,7 +25,7 @@ function Navbar() {
     <>
       <nav className="navbar">
         <div className="navbar-container">
-          <img src="" />
+          <img src={logoIcon} className="navbar-img" />
           <Link to="/" className="navbar-logo">
             Certifichain
           </Link>
@@ -38,14 +38,19 @@ function Navbar() {
                 FAQ
               </Link>
             </li>
-            <li className="nav-item"></li>
           </ul>
+          <div className="vertical"></div>
           {button && (
             <Button buttonStyle="btn--outline">
-              <Link to="/login">Sign In</Link>
+              <Link to="/login" style={{ textDecoration: 'none',color: "white"}}>Sign In</Link>
             </Button>
           )}
-          {button && <Button buttonStyle="btn--outline">Sign Up</Button>}
+          {button && (<Button buttonStyle="btn--outline">Sign Up</Button>)}
+          {button && (
+            <Button buttonStyle="btn--outline">
+              <Link to="/input" style={{ textDecoration: 'none',color: "white"}}>Input</Link>
+            </Button>
+          )}
         </div>
       </nav>
     </>

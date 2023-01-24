@@ -1,6 +1,5 @@
 :root {
     --primary: #fff;
-
 }
 
 .btn {
@@ -21,8 +20,13 @@
     background-color: transparent;
     color: #fff;
     padding: 8px 20px;
-    border: 1px solid var(--primary);
+    border: 2px solid var(--primary);
+    border-radius: 10px;
     transition: all 0.3s ease-out;
+    margin: 15px;
+    width: max-content;
+    font-size: 15px;
+    font-weight: bold;
 }
 
 .btn-medium{
