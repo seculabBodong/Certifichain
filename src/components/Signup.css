@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT&display=swap');
+ol, ul {
+    list-style: none;
+}
 
 .App{
     height: 100%;
@@ -16,7 +18,7 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
-    padding: 0% 15% 0% 5%; 
+    padding-right: 15%;
     margin-top: 20%;
 }
 .logoContainer{
@@ -24,7 +26,6 @@
     text-align: start;
 }
 .logo{
-    padding-left: 5%;
     color: #E5E5CB;
     font-weight: 400;
     font-size: 2rem;
@@ -47,15 +48,12 @@
     text-align: start;
     color: white;
 }
-.side-title{
-    font-family: 'Old Standard TT', serif;
-    color: #E5E5CB;
-    font-size: 3em;
+.title{
+    font-weight: 700;
+    font-size: 2em;
     margin-bottom: 70px;
 }
 .secondary{
-    font-family: 'Old Standard TT', serif;
-    color: #E5E5CB;
     font-weight: 400;
     font-size: 1em;
 }

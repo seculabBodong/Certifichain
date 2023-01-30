@@ -1,7 +1,8 @@
 import { NavLink } from "react-router-dom";
-import Navbar from "../../components/Login.css";
+import Navbar from "../../components/Signup.css";
 import logo from "../../assets/logoIcon.png"
-export function Login() {
+
+export function Signup() {
   return (
     <div className="App">
       {/* <div className="mainContainer1"> */}
@@ -15,11 +16,11 @@ export function Login() {
           <div className="mainContainer">
             <div className="textContainer">
               <div className="side-title">
-                <text>Selamat datang kembali!</text>
+                <text>Silahkan Mendaftar</text>
               </div>
               <div className="secondary">
                 <text>
-                Silahkan login untuk dapat menggunakan fitur lengkap, yahaayuuk!
+                    Hmm mari daftarkan organisasimu sekarang, gaskan!
                 </text>
               </div>
             </div>
@@ -30,13 +31,26 @@ export function Login() {
           <div className="formContainer">
             <div className="formTitle"> 
               <text className="titleLogin">
-                Login
+                Sign Up
               </text>
             </div>
             <form className="form" onSubmit={(e) => {
                 e.preventDefault();
                 this.signIn();
               }}>
+              <div className="formField">
+                <label className="formFieldLabel" htmlFor="email">
+                  Organization Name
+                </label>
+                <input
+                  type="text"
+                  id="email"
+                  className="formFieldInput"
+                  placeholder="Enter organization name"
+                  name="email"
+                  required />
+              </div>
+
               <div className="formField">
                 <label className="formFieldLabel" htmlFor="email">
                   Email
@@ -63,20 +77,34 @@ export function Login() {
                 />
               </div>
 
-              <div className="formFieldButtoms">
-                <button className="formFieldButton">Login</button>{" "}
-                <NavLink className="formFieldLink">
-                  Lupa password
-                </NavLink>
-              </div>
-
-
-            </form>
               <div className="formField">
-                <span className="infoText">Belum memliki akun? 
-                  <NavLink className="signUp"> signup </NavLink>
-                </span>
+                <label className="formFieldLabel" htmlFor="password">
+                  Re-type Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  className="formFieldInput"
+                  placeholder="Enter your password"
+                  name="password"
+                />
               </div>
+
+              <div className="formField">
+                <label className="formFieldLabel" htmlFor="password">
+                  Supporting File
+                </label>
+                <div className="input-logo-container">
+                    <label for="upload-logo">Pilih File</label>
+                    <input type="file" name="photo" id="upload-logo" />
+                </div>
+              </div>
+
+              
+              <div className="formFieldButtoms">
+                <button className="formFieldButton">Submit</button>{" "}
+              </div>
+            </form>
           </div>
           
         </div>

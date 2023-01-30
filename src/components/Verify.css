@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
+ol, ul {
+    list-style: none;
+}
+
 .main-container {
     display: flex;
     flex-direction: row;
@@ -25,19 +29,21 @@
 
 .pop-verified {
     display: flex;
+    width: 40vw;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     border: 3px solid #2AA647;
     border-radius: 10px;
-    padding: 1% 10% 2% 10%;
+    padding: 1% 5% 2% 5%;
     margin-top: 2%;
     font-weight: bold;
+    font-size: 0.8vw;
 }
 
 .left-options {
     font-family: 'Old Standard TT', serif;
-    font-size: 25px;
+    font-size: 1.2vw;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -45,6 +51,7 @@
 
 .left-description {
     font-family: 'Old Standard TT', serif;
+    font-size: 1.1vw;
     background-color: white;
     display: flex;
     padding: 6%;
@@ -58,6 +65,11 @@
     height: 30px;
 }
 
+.no-horizontal-div {
+    border-bottom: 0px solid rgb(185, 185, 185);
+    height: 30px;
+}
+
 .display-cert {
     display: flex;
     border: 5px solid #000000;
@@ -68,6 +80,10 @@
     display: flex;
     justify-content: flex-end;
     width: 70%;
+}
+
+.display-cert-img {
+    width: 45vw;
 }
 
 .scan-other {

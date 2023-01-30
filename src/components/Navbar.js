@@ -45,7 +45,10 @@ function Navbar() {
               <Link to="/login" style={{ textDecoration: 'none',color: "white"}}>Sign In</Link>
             </Button>
           )}
-          {button && (<Button buttonStyle="btn--outline">Sign Up</Button>)}
+          {button && (
+            <Button buttonStyle="btn--outline">
+              <Link to="/signup" style={{ textDecoration: 'none',color: "white"}}>Sign Up</Link>
+            </Button>)}
           {button && (
             <Button buttonStyle="btn--outline">
               <Link to="/input" style={{ textDecoration: 'none',color: "white"}}>Input</Link>

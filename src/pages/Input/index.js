@@ -1,12 +1,23 @@
+import React, { useRef } from "react";
 import "../../components/Input.css"
 import certificate from "../../assets/certificate2.png"
 import varrow from "../../assets/varrow.png"
 import infoIcon from "../../assets/icon_info_outline.png"
+import Editor from '@toast-ui/editor';
+import "tui-image-editor/dist/tui-image-editor.css";
+import "tui-color-picker/dist/tui-color-picker.css";
+import "@toast-ui/editor/dist/toastui-editor.css";
 
 export function Input() {
   return (
     <>
+      <link
+        rel="stylesheet"
+        href="https://uicdn.toast.com/tui-image-editor/latest/tui-image-editor.css"
+      />
+      <script src="https://uicdn.toast.com/tui-image-editor/latest/tui-image-editor.js"></script>
       <div className="main-container">
+      <div id="tui-image-editor"></div>
         <div className="left-contain">
           <div className="template-contain">
             Pilih Template :
