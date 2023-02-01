@@ -1,4 +1,4 @@
-version: "3.7"
+version: "2"
 services:
   peer-base:
     image: hyperledger/fabric-peer:latest
@@ -15,6 +15,7 @@ services:
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/crypto/peer/tls/server.crt
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/crypto/peer/tls/ca.crt
     # working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    working_dir: /root
     command: peer node start
     volumes:
       - /var/run/:/host/var/run/

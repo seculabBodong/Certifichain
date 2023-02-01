@@ -1,4 +1,4 @@
-version: "3.7"
+version: "2"
 
 networks:
   test:
@@ -69,11 +69,21 @@ services:
       - ORDERER_METRICS_PROVIDER=prometheus
       - ORDERER_OPERATIONS_LISTENADDRESS=0.0.0.0:8443
       - ORDERER_GENERAL_LISTENPORT=7050
+
+      - ORDERER_ADMIN_TLS_ENABLED=true
+      - ORDERER_ADMIN_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_ADMIN_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_ADMIN_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_ADMIN_TLS_CLIENTROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:7053
+
     # working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderers
+    working_dir: /root
     command: orderer
     ports:
       - 7050:7050
       - 8443:8443
+      - 7053:7053
     networks:
       - test
     volumes:
@@ -85,12 +95,46 @@ services:
     container_name: couchdb0
     image: hyperledger/fabric-couchdb
     environment:
-      - COUCHDB_USER=admin
-      - COUCHDB_PASSWORD=adminpw
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
     ports:
       - 5984:5984
     networks:
       - test
+
+  couchdb1:
+    container_name: couchdb1
+    image: hyperledger/fabric-couchdb
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - 6984:5984
+    networks:
+      - test
+
+  couchdb2:
+    container_name: couchdb2
+    image: hyperledger/fabric-couchdb
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - 7984:5984
+    networks:
+      - test
+
+  couchdb3:
+    container_name: couchdb3
+    image: hyperledger/fabric-couchdb
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - 8984:5984
+    networks:
+      - test
+
 
   peer0.org1.example.com:
     container_name: peer0.org1.example.com
@@ -137,7 +181,7 @@ services:
       - ../channel/:/etc/hyperledger/channel/
     networks:
       - test
-
+  
   peer1.org1.example.com:
     container_name: peer1.org1.example.com
     extends:
