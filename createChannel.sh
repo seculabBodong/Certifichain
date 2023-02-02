@@ -57,24 +57,31 @@ updateAnchorPeers(){
 # FABRIC_CFG_PATH=${PWD}/configtx
 export FABRIC_CFG_PATH=${PWD}/artifacts/channel/config/
 
-# ## Create channel genesis block
-# infoln "Generating channel genesis block '${CHANNEL_NAME}.block'"
+## Create channel genesis block
+infoln "Generating channel genesis block '${CHANNEL_NAME}.block'"
 
-# ## Create channel
-# infoln "Creating channel ${CHANNEL_NAME}"
-# createChannel
-# successln "Channel '$CHANNEL_NAME' created"
+## Create channel
+infoln "Creating channel ${CHANNEL_NAME}"
+createChannel
+successln "Channel '$CHANNEL_NAME' created"
 
-# ## Join all the peers to the channel
-# joinChannel
+## Join all the peers to the channel
+joinChannel
 
-# ## Set the anchor peers for each org in the channel
-# updateAnchorPeers
+## Set the anchor peers for each org in the channel
+updateAnchorPeers
 
-# successln "Channel '$CHANNEL_NAME' joined"
+successln "Channel '$CHANNEL_NAME' joined"
+
+## Check Channel in peer
+setGlobalsForPeer0Org1
+peer channel list
+
+setGlobalsForPeer1Org1
+peer channel list
+
+setGlobalsForPeer0Org2
+peer channel list
 
 setGlobalsForPeer1Org2
 peer channel list
-
-
-
