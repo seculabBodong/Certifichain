@@ -132,10 +132,11 @@ class AssetTransfer extends Contract {
     }
 
     // GetAllAssets returns all assets found in the world state.
-    async GetAllAssets(ctx, acara, organisasi) {
+    async GetAllAssets(ctx, acara) {
         const allResults = [];
         // range query with empty string for startKey and endKey does an open-ended query of all assets in the chaincode namespace.
-        const iterator = await ctx.stub.getStateByRange(acara, organisasi);
+        console.log('================ name => ' + this.name);
+        const iterator = await ctx.stub.getStateByPartialCompositeKey("ACARA",[acara]);
         console.log(iterator);
         // let result = await iterator.next();
         // while (!result.done) {
@@ -151,6 +152,7 @@ class AssetTransfer extends Contract {
         //     result = await iterator.next();
         // }
         // return JSON.stringify(allResults);
+        // return iterator;
     }
 }
 
