@@ -21,8 +21,8 @@ var helper = require('./app/helper.js');
 // var join = require('./app/join-channel.js');
 // var install = require('./app/install-chaincode.js');
 // var instantiate = require('./app/instantiate-chaincode.js');
-// var invoke = require('./app/invoke-transaction.js');
-// var query = require('./app/query.js');
+var invoke = require('./app/invoke-transaction.js');
+var query = require('./app/query.js');
 var host = process.env.HOST || hfc.getConfigSetting('host');
 var port = process.env.PORT || hfc.getConfigSetting('port');
 
@@ -119,4 +119,96 @@ app.post('/users', async function (req, res) {
 		res.json({ success: false, message: response });
 	}
 
+});
+
+// Invoke transaction on chaincode on target peers
+app.post('/channels/:channelName/chaincodes/:chaincodeName', async function (req, res) {
+	try {
+		logger.debug('==================== INVOKE ON CHAINCODE ==================');
+		var peers = req.body.peers;
+		var chaincodeName = req.params.chaincodeName;
+		var channelName = req.params.channelName;
+		var fcn = req.body.fcn;
+		var args = req.body.args;
+		logger.debug('channelName  : ' + channelName);
+		logger.debug('chaincodeName : ' + chaincodeName);
+		logger.debug('fcn  : ' + fcn);
+		logger.debug('args  : ' + args);
+		if (!chaincodeName) {
+			res.json(getErrorMessage('\'chaincodeName\''));
+			return;
+		}
+		if (!channelName) {
+			res.json(getErrorMessage('\'channelName\''));
+			return;
+		}
+		if (!fcn) {
+			res.json(getErrorMessage('\'fcn\''));
+			return;
+		}
+		if (!args) {
+			res.json(getErrorMessage('\'args\''));
+			return;
+		}
+
+		const start = Date.now();
+		let message = await invoke.invokeChaincode(peers, channelName, chaincodeName, fcn, args, req.username, req.orgname);
+		const latency = Date.now() - start;
+
+
+		const response_payload = {
+			result: message,
+			error: null,
+			errorData: null
+		}
+		res.send(response_payload);
+
+	} catch (error) {
+		const response_payload = {
+			result: null,
+			error: error.name,
+			errorData: error.message
+		}
+		res.send(response_payload)
+	}
+});
+
+// Query on chaincode on target peers
+app.get('/home', async function (req, res) {
+	logger.debug('==================== QUERY BY CHAINCODE ==================');
+	// var channelName = req.params.channelName; //"mychannel"
+	// var chaincodeName = req.params.chaincodeName; //"basic"
+	var channelName = "mychannel";
+	var chaincodeName = "basic"; 
+	let args = req.query.args;
+	let fcn = req.query.fcn;
+	let peer = req.query.peer;
+
+	logger.debug('channelName : ' + channelName);
+	logger.debug('chaincodeName : ' + chaincodeName);
+	logger.debug('fcn : ' + fcn);
+	logger.debug('args : ' + args);
+
+	if (!chaincodeName) {
+		res.json(getErrorMessage('\'chaincodeName\''));
+		return;
+	}
+	if (!channelName) {
+		res.json(getErrorMessage('\'channelName\''));
+		return;
+	}
+	if (!fcn) {
+		res.json(getErrorMessage('\'fcn\''));
+		return;
+	}
+	if (!args) {
+		res.json(getErrorMessage('\'args\''));
+		return;
+	}
+	args = args.replace(/'/g, '"');
+	args = JSON.parse(args);
+	logger.debug(args);
+
+	let message = await query.queryChaincode(peer, channelName, chaincodeName, args, fcn, req.username, req.orgname);
+	res.send(message);
 });
