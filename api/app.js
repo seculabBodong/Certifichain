@@ -212,3 +212,20 @@ app.get('/home', async function (req, res) {
 	let message = await query.queryChaincode(peer, channelName, chaincodeName, args, fcn, req.username, req.orgname);
 	res.send(message);
 });
+
+// Query Get Transaction by Transaction ID
+app.get('/channels/:channelName/transactions/:trxnId', async function (req, res) {
+	logger.debug('================ GET TRANSACTION BY TRANSACTION_ID ======================');
+	logger.debug('channelName : ' + req.params.channelName);
+	let trxnId = req.params.trxnId;
+	let peer = req.query.peer;
+	if (!trxnId) {
+		res.json(getErrorMessage('\'trxnId\''));
+		return;
+	}
+
+	let message = await query.getTransactionByID(peer, req.params.channelName, trxnId, req.username, req.orgname);
+	res.send(message);
+});
+
+module.exports = app
