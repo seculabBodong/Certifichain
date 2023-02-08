@@ -124,6 +124,7 @@ chaincodeQuery(){
     # peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function":"GetAllAssets","Args":["Riset Grup 2023"]}' >&output.json
     # peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function":"ReadAsset","Args":["021bdf2"]}'
     peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"Args":["GetAllAssets"]}'>&output.json
+    # peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function":"AssetByColor","Args":["black"]}' >&output.json
     cat output.json
 }
 packageChaincode

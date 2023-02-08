@@ -60,12 +60,22 @@ class AssetTransfer extends Contract {
         ];
 
         for (const asset of assets) {
-            asset.docType = 'asset';
+            await this.CreateAsset(
+				ctx,
+				asset.ID,
+				asset.Color,
+				asset.Size,
+				asset.Owner,
+				asset.AppraisedValue
+			);
+            // asset.docType = 'asset';
+
             // example of how to write to world state deterministically
             // use convetion of alphabetic order
             // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
             // when retrieving data, in any lang, the order of data will be the same and consequently also the corresonding hash
-            await ctx.stub.putState(asset.ID, Buffer.from(stringify(sortKeysRecursive(asset))));
+            
+            // await ctx.stub.putState(asset.ID, Buffer.from(stringify(sortKeysRecursive(asset))));
         }
     }
 
@@ -77,6 +87,7 @@ class AssetTransfer extends Contract {
         }
 
         const asset = {
+            docType: 'asset',
             ID: id,
             Color: color,
             Size: size,
@@ -85,6 +96,14 @@ class AssetTransfer extends Contract {
         };
         // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
         await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(asset))));
+        
+        let indexName = 'color~name';
+		let colorNameIndexKey = await ctx.stub.createCompositeKey(indexName, [asset.Color, asset.ID]);
+
+		//  Save index entry to state. Only the key name is needed, no need to store a duplicate copy of the marble.
+		//  Note - passing a 'nil' value will effectively delete the key from state, therefore we pass null character as value
+		// await ctx.stub.putState(colorNameIndexKey, Buffer.from('\u0000'));
+        await ctx.stub.putState(colorNameIndexKey, Buffer.from(stringify(sortKeysRecursive(asset))));
         return JSON.stringify(asset);
     }
 
@@ -113,7 +132,14 @@ class AssetTransfer extends Contract {
             AppraisedValue: appraisedValue,
         };
         // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
-        return ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(updatedAsset))));
+        await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(updatedAsset))));
+
+        let indexName = 'color~name';
+		let colorNameIndexKey = await ctx.stub.createCompositeKey(indexName, [asset.Color, asset.ID]);
+
+		// await ctx.stub.putState(colorNameIndexKey, Buffer.from('\u0000'));
+        await ctx.stub.putState(colorNameIndexKey, Buffer.from(stringify(sortKeysRecursive(updatedAsset))));
+        return JSON.stringify(updatedAsset);
     }
 
     // DeleteAsset deletes an given asset from the world state.
@@ -162,6 +188,91 @@ class AssetTransfer extends Contract {
         }
         return JSON.stringify(allResults);
     }
+
+    // GetAssetHistory returns the chain of custody for an asset since issuance.
+	async GetAssetHistory(ctx, assetName) {
+
+		let resultsIterator = await ctx.stub.getHistoryForKey(assetName);
+		let results = await this._GetAllResults(resultsIterator, true);
+
+		return JSON.stringify(results);
+	}
+    // Get Asset By Color
+    async AssetByColor(ctx, color) {
+        const allResults = [];
+		// Query the color~name index by color
+		// This will execute a key range query on all keys starting with 'color'
+		// const iterator = await ctx.stub.getStateByPartialCompositeKey('color~name', [color]);
+        // let result = await iterator.next();
+        // while (!result.done) {
+        //     const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+        //     let record;
+        //     try {
+        //         record = JSON.parse(strValue);
+        //     } catch (err) {
+        //         console.log(err);
+        //         record = strValue;
+        //     }
+        //     allResults.push(record);
+        //     result = await iterator.next();
+        // }
+        // return JSON.stringify(allResults);
+
+        let coloredAssetResultsIterator = await ctx.stub.getStateByPartialCompositeKey('color~name', [color]);
+
+		// Iterate through result set and for each asset found, transfer to newOwner
+		let responseRange = await coloredAssetResultsIterator.next();
+		while (!responseRange.done) {
+			if (!responseRange || !responseRange.value || !responseRange.value.key) {
+				return;
+			}
+            const strValue = Buffer.from(responseRange.value.value.toString()).toString('utf8');
+            let record;
+            try {
+                record = JSON.parse(strValue);
+            } catch (err) {
+                console.log(err);
+                record = strValue;
+            }
+            allResults.push(record);
+			responseRange = await coloredAssetResultsIterator.next();
+		}
+        return JSON.stringify(allResults);
+
+	}
+
+    async _GetAllResults(iterator, isHistory) {
+		let allResults = [];
+		let res = await iterator.next();
+		while (!res.done) {
+			if (res.value && res.value.value.toString()) {
+				let jsonRes = {};
+				console.log(res.value.value.toString('utf8'));
+				if (isHistory && isHistory === true) {
+					jsonRes.TxId = res.value.txId;
+					jsonRes.Timestamp = res.value.timestamp;
+					try {
+						jsonRes.Value = JSON.parse(res.value.value.toString('utf8'));
+					} catch (err) {
+						console.log(err);
+						jsonRes.Value = res.value.value.toString('utf8');
+					}
+				} else {
+					jsonRes.Key = res.value.key;
+					try {
+						jsonRes.Record = JSON.parse(res.value.value.toString('utf8'));
+					} catch (err) {
+						console.log(err);
+						jsonRes.Record = res.value.value.toString('utf8');
+					}
+				}
+				allResults.push(jsonRes);
+			}
+			res = await iterator.next();
+		}
+		iterator.close();
+		return allResults;
+	}
 }
 
 module.exports = AssetTransfer;
