@@ -123,6 +123,17 @@ class AssetTransfer extends Contract {
            throw new Error(`The asset ${id} does not exist`);
        }
 
+       let valAsbytes = await ctx.stub.getState(id); // get the asset from chaincode state
+       let jsonResp = {};
+       let oldAssetJSON;
+       try {
+           oldAssetJSON = JSON.parse(valAsbytes.toString());
+       } catch (err) {
+           jsonResp = {};
+           jsonResp.error = `Failed to decode JSON of: ${id}`;
+           throw new Error(jsonResp);
+       }
+
        // overwriting original asset with new asset
        const updatedAsset = {
            docType: 'asset',
@@ -134,16 +145,18 @@ class AssetTransfer extends Contract {
        };
        // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
        await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(updatedAsset))));
-       // ini belum kelar
+       
+       // Delete Old Composite
        let indexName = 'color~name';
-       let colorNameIndexKey = await ctx.stub.createCompositeKey(indexName, [asset.Color, asset.ID]);
+       let colorNameIndexKey = await ctx.stub.createCompositeKey(indexName, [oldAssetJSON.Color, oldAssetJSON.ID]);
        if (!colorNameIndexKey) {
            throw new Error(' Failed to create the createCompositeKey');
        }
        //  Delete index entry to state.
        await ctx.stub.deleteState(colorNameIndexKey);
        
-       colorNameIndexKey = await ctx.stub.createCompositeKey(indexName, [asset.Color, asset.ID]);
+       // Update Composite
+       colorNameIndexKey = await ctx.stub.createCompositeKey(indexName, [updatedAsset.Color, updatedAsset.ID]);
        await ctx.stub.putState(colorNameIndexKey, Buffer.from('\u0000'));
        // await ctx.stub.putState(colorNameIndexKey, Buffer.from(stringify(sortKeysRecursive(updatedAsset))));
        return JSON.stringify(updatedAsset);
@@ -155,6 +168,30 @@ class AssetTransfer extends Contract {
        if (!exists) {
            throw new Error(`The asset ${id} does not exist`);
        }
+
+       let valAsbytes = await ctx.stub.getState(id); // get the asset from chaincode state
+       let jsonResp = {};
+       if (!valAsbytes) {
+           jsonResp.error = `Asset does not exist: ${id}`;
+           throw new Error(jsonResp);
+       }
+       let assetJSON;
+       try {
+           assetJSON = JSON.parse(valAsbytes.toString());
+       } catch (err) {
+           jsonResp = {};
+           jsonResp.error = `Failed to decode JSON of: ${id}`;
+           throw new Error(jsonResp);
+       }
+       // delete the index
+       let indexName = 'color~name';
+       let colorNameIndexKey = ctx.stub.createCompositeKey(indexName, [assetJSON.color, assetJSON.assetID]);
+       if (!colorNameIndexKey) {
+           throw new Error(' Failed to create the createCompositeKey');
+       }
+       //  Delete index entry to state.
+       await ctx.stub.deleteState(colorNameIndexKey);
+       
        return ctx.stub.deleteState(id);
    }
 
