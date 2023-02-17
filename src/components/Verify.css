@@ -58,16 +58,20 @@ ol, ul {
     margin: 5% 10% 10% 10%;
     text-align: justify;
     border-radius: 10px;
+    width: fit-content;
 }
 
 .horizontal-div {
-    border-bottom: 2px solid rgb(0, 0, 0);
+    border-bottom: 2px solid transparent;
     height: 30px;
 }
 
-.no-horizontal-div {
-    border-bottom: 0px solid rgb(185, 185, 185);
-    height: 30px;
+.horizontal-div:hover {
+    border-bottom: 2px solid #000000;
+}
+
+.aktif {
+    border-bottom: 2px solid #000000;
 }
 
 .display-cert {

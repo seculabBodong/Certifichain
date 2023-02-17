@@ -1,9 +1,20 @@
 import "../../components/Home.css";
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import award from "../../assets/award1.png"
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { getMe } from "../../features/authSlice";
 
 export function Home() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const {isError} = useSelector((state => state.auth));
+
+  useEffect(() => {
+    dispatch(getMe());
+  }, [dispatch]);
+
   return (
     <>
       <div className="container">

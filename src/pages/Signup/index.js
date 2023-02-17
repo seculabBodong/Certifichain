@@ -1,8 +1,47 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Signup.css";
 import logo from "../../assets/logoIcon.png"
+import defaultProfile from "../../assets/orgPP.png"
+import React, {useState} from "react";
+import axios from "axios";
 
 export function Signup() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confPassword, setConfPassword] = useState("");
+  const [role, setRole] = useState("");
+  const [msg, setMsg] = useState("");
+  const [imageFile, setImageFile] = useState("");
+  const [url, setUrl] = useState("");
+  const navigate = useNavigate();
+
+  const saveUser = async (e) => {
+    
+    e.preventDefault();
+    try {
+      await axios.post("http://localhost:5000/users", {
+        name: name,
+        email: email,
+        password: password,
+        confPassword: confPassword,
+        role: role
+        // imageFile: defaultProfile,
+      }
+      // , {
+      //   headers: {
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // }
+      );
+      navigate("/login");
+    } catch (error) {
+      if(error.response){
+        setMsg(error.response.data.msg)
+      }
+    }
+  };
+
   return (
     <div className="App">
       {/* <div className="mainContainer1"> */}
@@ -27,27 +66,25 @@ export function Signup() {
           </div>
         </div>
 
-        <div className="appForm">
+        <div className="appFormSignup">
           <div className="formContainer">
             <div className="formTitle"> 
               <text className="titleLogin">
                 Sign Up
               </text>
             </div>
-            <form className="form" onSubmit={(e) => {
-                e.preventDefault();
-                this.signIn();
-              }}>
+            <form className="form" onSubmit={saveUser}>
+              <p>{msg}</p>
               <div className="formField">
                 <label className="formFieldLabel" htmlFor="email">
                   Organization Name
                 </label>
                 <input
                   type="text"
-                  id="email"
                   className="formFieldInput"
                   placeholder="Enter organization name"
-                  name="email"
+                  value={name}
+                  onChange={(e)=>setName(e.target.value)}
                   required />
               </div>
 
@@ -60,7 +97,8 @@ export function Signup() {
                   id="email"
                   className="formFieldInput"
                   placeholder="Enter your email"
-                  name="email"
+                  value={email}
+                  onChange={(e)=>setEmail(e.target.value)}
                   required />
 
               </div>
@@ -73,7 +111,8 @@ export function Signup() {
                   id="password"
                   className="formFieldInput"
                   placeholder="Enter your password"
-                  name="password"
+                  value={password}
+                  onChange={(e)=>setPassword(e.target.value)}
                 />
               </div>
 
@@ -86,8 +125,24 @@ export function Signup() {
                   id="password"
                   className="formFieldInput"
                   placeholder="Enter your password"
-                  name="password"
+                  value={confPassword}
+                  onChange={(e)=>setConfPassword(e.target.value)}
                 />
+              </div>
+
+              <div className="formField">
+                <label className="formFieldLabel" htmlFor="role">
+                  Role
+                </label>
+                <select
+                  type="text"
+                  className="formFieldInput"
+                  placeholder="Enter your role"
+                  value={role}
+                  onChange={(e)=>setRole(e.target.value)}>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                </select>
               </div>
 
               <div className="formField">
@@ -102,7 +157,7 @@ export function Signup() {
 
               
               <div className="formFieldButtoms">
-                <button className="formFieldButton">Submit</button>{" "}
+                <button type="submit" className="formFieldButton">Submit</button>{" "}
               </div>
             </form>
           </div>

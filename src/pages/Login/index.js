@@ -1,7 +1,30 @@
+import React, {useState, useEffect} from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { LoginUser, reset } from "../../features/authSlice";
 import { NavLink } from "react-router-dom";
 import Navbar from "../../components/Login.css";
 import logo from "../../assets/logoIcon.png"
+
 export function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const {user, isError, isSuccess, isLoading, message} = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if(user || isSuccess){
+      navigate("/")
+    }
+    dispatch(reset());
+  }, [user, isSuccess, dispatch, navigate])
+  
+  const Auth = (e) => {
+    e.preventDefault();
+    dispatch(LoginUser({email, password}));
+  }
+
   return (
     <div className="App">
       {/* <div className="mainContainer1"> */}
@@ -19,7 +42,7 @@ export function Login() {
               </div>
               <div className="secondary">
                 <text>
-                Silahkan login untuk dapat menggunakan fitur lengkap, yahaayuuk!
+                  Silahkan login untuk dapat menggunakan fitur lengkap, yahaayuuk!
                 </text>
               </div>
             </div>
@@ -33,11 +56,9 @@ export function Login() {
                 Login
               </text>
             </div>
-            <form className="form" onSubmit={(e) => {
-                e.preventDefault();
-                this.signIn();
-              }}>
+            <form className="form" onSubmit={Auth}>
               <div className="formField">
+                {isError && <div>{message}</div>}
                 <label className="formFieldLabel" htmlFor="email">
                   Email
                 </label>
@@ -47,6 +68,8 @@ export function Login() {
                   className="formFieldInput"
                   placeholder="Enter your email"
                   name="email"
+                  value={email}
+                  onChange={(e)=>setEmail(e.target.value)}
                   required />
 
               </div>
@@ -60,18 +83,19 @@ export function Login() {
                   className="formFieldInput"
                   placeholder="Enter your password"
                   name="password"
+                  value={password}
+                  onChange={(e)=>setPassword(e.target.value)}
                 />
               </div>
 
               <div className="formFieldButtoms">
-                <button className="formFieldButton">Login</button>{" "}
+                <button type="submit" className="formFieldButton">{isLoading ? 'Loading...' : "Login"}</button>{" "}
                 <NavLink className="formFieldLink">
                   Lupa password
                 </NavLink>
               </div>
-
-
             </form>
+            
               <div className="formField">
                 <span className="infoText">Belum memliki akun? 
                   <NavLink className="signUp"> signup </NavLink>
