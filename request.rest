@@ -1,0 +1,96 @@
+//membuat user
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+    "name": "Josh alim",
+    "email": "joshiap@gmail.com",
+    "password": "123456",
+    "confPassword": "123456",
+    "role": "user"
+}
+
+###
+//Get all User
+GET http://localhost:5000/users
+
+###
+//Get Single User
+GET http://localhost:5000/users/713193dc-611d-4908-9223-61c7f1769e39
+
+###
+//Update User
+PATCH http://localhost:5000/users/713193dc-611d-4908-9223-61c7f1769e39
+Content-Type: application/json
+
+{
+    "name": "Josh Deeznuts",
+    "email": "josh@gmail.com",
+    "password": "",
+    "confPassword": "",
+    "role": "user"
+}
+
+###
+//hapus user
+DELETE  http://localhost:5000/users/713193dc-611d-4908-9223-61c7f1769e39
+
+###
+//login admin
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email": "admin@gmail.com",
+    "password": "123456"
+}
+
+###
+//login user
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email": "josh@gmail.com",
+    "password": "123456"
+}
+
+###
+//melihat akun sendiri
+GET http://localhost:5000/me
+
+###
+// logout
+DELETE http://localhost:5000/logout
+
+###
+//Get all product
+GET http://localhost:5000/products
+
+###
+//Get single product
+GET http://localhost:5000/products/7416ea8c-9121-4d10-8cf0-91243db66f5b
+
+###
+// POST data produk
+POST http://localhost:5000/products
+Content-Type: application/json
+
+{
+    "name": "Produk 6",
+    "price": 1001
+}
+
+###
+// update produk
+PATCH  http://localhost:5000/products/7416ea8c-9121-4d10-8cf0-91243db66f5b
+Content-Type: application/json
+
+{
+    "name": "Produk updated",
+    "price": 2000
+}
+
+###
+// hapus produk
+DELETE http://localhost:5000/products/7416ea8c-9121-4d10-8cf0-91243db66f5b
