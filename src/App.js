@@ -9,15 +9,17 @@ import { Input } from "./pages/Input";
 import { Verify } from "./pages/Verify";
 import { Signup } from "./pages/Signup";
 import { Profile } from "./pages/Profile";
+import { Event } from "./pages/Event";
 
 function App() {
   return (
     <div>
       <Router>
-        <Navbar/>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/dashboard" element={<Dashboard />}></Route>
+          <Route path="/event" element={<Event />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/input" element={<Input />}></Route>
           <Route path="/verify" element={<Verify />}></Route>

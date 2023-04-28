@@ -1,0 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+.event-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

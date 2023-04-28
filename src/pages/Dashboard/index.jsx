@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getMe } from "../../features/authSlice";
+import iconpdf from "../../assets/file-download.png";
+import iconcheck from "../../assets/icon_checkmark.png";
+import iconcross from "../../assets/close-circle.png";
 import axios from "axios";
 
 export function Dashboard(){
@@ -37,12 +40,77 @@ export function Dashboard(){
     return(
         <>
             <div>
-                {aset.map((data)=>{
+                {/* {aset.map((data)=>{
                     return(<li>
                         {data.ID}
                     </li>)
                 })}
-                <button onClick={getAsset}>oke</button>
+                <button onClick={getAsset}>oke</button> */}
+            <div style={{ height: "100%"}} className="dashboard-container">
+                <div className="dashboard-content">
+                    <div className="dashboard-certlist">
+                        <div style={{ fontSize: 32, fontWeight: "bold"}} className="readex-pro">Approve organisasi yang terpercaya</div>
+                        <div style={{ margin: "1%"}}> 
+                        <table>
+                            <tr>
+                            <th>Organization</th>
+                            <th>Email</th>
+                            <th>Support File</th>
+                            <th>Status</th>
+                            <th>Approve</th>
+                            </tr>
+                            <tr>
+                            <td>USER</td>
+                            <td>organisasix@gmail.com</td>
+                            <td><img src={iconpdf} style={{ alignItems: "center"}} className="dashboard-optionbox-icon"/></td>
+                            <td>no status</td>
+                            <td><img src={iconcheck} className="dashboard-optionbox-icon"/><img src={iconcross} className="dashboard-optionbox-icon"/></td>
+                            </tr>
+                        </table>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+                <div className="dashboard-container">
+                <div className="dashboard-content">
+                    <div className="dashboard-certlist">
+                        <div style={{ fontSize: 32, fontWeight: "bold"}} className="readex-pro">Approve organisasi yang terpercaya</div>
+                        <div style={{ margin: "1%"}}> 
+                        <table>
+                            <tr>
+                            <th>Organization</th>
+                            <th>Email</th>
+                            <th>Support File</th>
+                            <th>Status</th>
+                            <th>Approve</th>
+                            </tr>
+                            <tr>
+                            <td>USER</td>
+                            <td>organisasix@gmail.com</td>
+                            <td><img src={iconpdf} className="dashboard-optionbox-icon"/></td>
+                            <td>no status</td>
+                            <td><div><img src={iconcheck} className="dashboard-optionbox-icon"/><img src={iconcross} className="dashboard-optionbox-icon"/></div></td>
+                            </tr>
+                            <tr>
+                            <td>USER</td>
+                            <td>organisasix@gmail.com</td>
+                            <td><img src={iconpdf} className="dashboard-optionbox-icon"/></td>
+                            <td>approve</td>
+                            <td><div><img src={iconcheck} className="dashboard-optionbox-icon"/><img src={iconcross} className="dashboard-optionbox-icon"/></div></td>
+                            </tr>
+                            <tr>
+                            <td>USER</td>
+                            <td>organisasix@gmail.com</td>
+                            <td><img src={iconpdf} className="dashboard-optionbox-icon"/></td>
+                            <td>disapprove</td>
+                            <td><div><img src={iconcheck} className="dashboard-optionbox-icon"/><img src={iconcross} className="dashboard-optionbox-icon"/></div></td>
+                            </tr>
+                        </table>
+                        </div>
+                    </div>
+                </div>
+                </div>
             </div>
         </>
     );
