@@ -1,5 +1,6 @@
 import Users from "../models/UserModel.js";
 import argon2, { hash } from "argon2";
+import path from "path";
 
 export const getUsers = async(req, res) => {
     try {
@@ -27,7 +28,7 @@ export const getUserById = async(req, res) => {
 }
 
 export const createUser = async(req, res) => {
-    const {name, email, password, confPassword, role, imageFile} = req.body;
+    const {name, email, password, confPassword, role, image, url} = req.body;
     if(password != confPassword) return res.status(400).json({
         msg: "Password dan confirm password tidak cocok"
     })
@@ -37,7 +38,9 @@ export const createUser = async(req, res) => {
             name: name,
             email: email,
             password: hashPassword,
-            role: role
+            role: role,
+            image: "defaultPP.png",
+            url: "http://localhost:5000/images/defaultPP.png",
         });
         res.status(201).json({msg: "Register Berhasil"});
     } catch (error) {

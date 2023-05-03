@@ -3,11 +3,11 @@ POST http://localhost:5000/users
 Content-Type: application/json
 
 {
-    "name": "Josh alim",
-    "email": "joshiap@gmail.com",
+    "name": "Admin Dev.",
+    "email": "admin@gmail.com",
     "password": "123456",
     "confPassword": "123456",
-    "role": "user"
+    "role": "admin"
 }
 
 ###

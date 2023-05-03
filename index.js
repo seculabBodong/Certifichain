@@ -7,6 +7,7 @@ import SequelizeStore from "connect-session-sequelize"
 import UserRoute from "./routes/UserRoute.js";
 import ProductRoute from "./routes/ProductRoute.js";
 import AuthRoute from "./routes/AuthRoute.js";
+import fileUpload from "express-fileupload";
 
 dotenv.config();
 
@@ -37,6 +38,8 @@ app.use(cors({
     origin: 'http://localhost:3000' //pake araay [] bila domain kita banyak
 }));
 app.use(express.json()); //menerima data dalam format json
+app.use(fileUpload());
+app.use(express.static("public"));
 app.use(UserRoute);
 app.use(ProductRoute);
 app.use(AuthRoute);

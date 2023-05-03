@@ -41,21 +41,21 @@ const Users = db.define('users', {
         validate: {
             notEmpty:true,
         }
+    },
+    image:{
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty:true,
+        }
+    },
+    url:{
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty:true,
+        }
     }
-    // image:{
-    //     type: DataTypes.STRING,
-    //     allowNull: false,
-    //     validate: {
-    //         notEmpty:true,
-    //     }
-    // },
-    // url:{
-    //     type: DataTypes.STRING,
-    //     allowNull: false,
-    //     validate: {
-    //         notEmpty:true,
-    //     }
-    // }
 }, {
     freezeTableName: true
 });
