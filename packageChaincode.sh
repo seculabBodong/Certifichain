@@ -123,10 +123,28 @@ chaincodeQuery(){
     setGlobalsForPeer0Org1
     # peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function":"GetAllAssets","Args":["Riset Grup 2023"]}' >&output.json
     # peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function":"ReadAsset","Args":["021bdf2"]}'
-    peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"Args":["GetAllAssets"]}'>&output.json
+    # peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"Args":["GetAllAssets"]}'>&output.json
+    peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function":"ReadAsset","Args":["random123"]}'>&output.json
     # peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function":"AssetByColor","Args":["black"]}' >&output.json
     cat output.json
 }
+# just testing
+chaincodeRandomid() {
+    setGlobalsForPeer0Org1
+    
+    # peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function":"ReadAsset","Args":["random111"]}'
+
+    ## asset teesting
+    peer chaincode invoke -o localhost:7050 \
+        --ordererTLSHostnameOverride orderer.example.com \
+        --tls $CORE_PEER_TLS_ENABLED \
+        --cafile $ORDERER_CA \
+        -C $CHANNEL_NAME -n ${CC_NAME} \
+        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_ORG1_CA \
+        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_ORG2_CA \
+        -c '{"function":"CreateAsset","Args":["", "ACARA 2", "Organisasi_Keamanan", "Test 2", "Workshop", "lorem ipsum asdeghtujryewe(contoh)", "eqwkvspdad== (base64)", "qsdaserzxc== (base64)", "qqwgkksddfas== (base64)"]}'
+}
+
 packageChaincode
 installChaincode
 queryInstalled
@@ -138,11 +156,14 @@ approveForMyOrg2
 checkCommitReadyness
 commitChaincodeDefination
 queryCommitted
-chaincodeInvokeInit 
+chaincodeInvokeInit
 sleep 5
 chaincodeInvoke
 sleep 3
 chaincodeQuery
+
 # setGlobalsForPeer0Org1
 # peer chaincode list --installed
 # peer chaincode list --instantiated -C mychannel
+
+# chaincodeRandomid
