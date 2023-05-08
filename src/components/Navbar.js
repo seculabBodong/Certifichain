@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./Button";
-import logoIcon from "../assets/logoIcon.png";
+import logoIcon from "../assets/logoIcon2.png";
 import ProfileIcon from "../assets/defaultPP.png"
 import "./Navbar.css";
 import { useDispatch, useSelector } from "react-redux";
