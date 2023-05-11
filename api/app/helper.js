@@ -8,8 +8,8 @@ var util = require('util');
 
 var hfc = require('fabric-client');
 hfc.setLogger(logger);
-
-async function getClientForOrg(userorg, username) {
+ 
+var getClientForOrg = async function(userorg, username) {
 	logger.debug('getClientForOrg - ****** START %s %s', userorg, username)
 	// get a fabric client loaded with a connection profile for this org
 	let config = '-connection-profile-path';
@@ -54,25 +54,32 @@ var getRegisteredUser = async function (username, userOrg, isJson) {
 		// first check to see if the user is already enrolled
 		var user = await client.getUserContext(username, true);
 		if (user && user.isEnrolled()) {
-			logger.info('Successfully loaded member from persistence');
+			// logger.info('Successfully loaded member from persistence');
+			console.log(`An identity for the user ${username} exists in the Chertifichain`);
+			var response = {
+				success: false,
+				secret: user._enrollmentSecret,
+				message: username + ' have been registered',
+			};
+			return response;
 		} else {
 			// user was not enrolled, so we will need an admin user object to register
 			logger.info('User %s was not enrolled, so we will need an admin user object to register', username);
 			var admins = hfc.getConfigSetting('admins');
 			let adminUserObj = await client.setUserContext({ username: admins[0].username, password: admins[0].secret });
 			let caClient = client.getCertificateAuthority();
-			let secret = await caClient.register({
-				enrollmentID: username,
-				affiliation: userOrg.toLowerCase() + '.department1',
-				attrs: [{ name: 'role', value: 'approver', ecert: true }]
-			}, adminUserObj);
 			// let secret = await caClient.register({
 			// 	enrollmentID: username,
-			// 	affiliation: userOrg.toLowerCase() + '.department1'
+			// 	affiliation: userOrg.toLowerCase() + '.department1',
+			// 	attrs: [{ name: 'role', value: 'approver', ecert: true }]
 			// }, adminUserObj);
+			let secret = await caClient.register({
+				enrollmentID: username,
+				affiliation: userOrg.toLowerCase() + '.department1'
+			}, adminUserObj);
 			logger.debug('Successfully got the secret for user %s', username);
-			user = await client.setUserContext({ username: username, password: secret, attr_reqs: [{ name: 'role', optional: false }] });
-			// user = await client.setUserContext({ username: username, password: secret });
+			// user = await client.setUserContext({ username: username, password: secret, attr_reqs: [{ name: 'role', optional: false }] });
+			user = await client.setUserContext({ username: username, password: secret });
 			logger.debug('Successfully enrolled username %s  and setUserContext on the client object', username);
 		}
 		if (user && user.isEnrolled) {
@@ -94,6 +101,27 @@ var getRegisteredUser = async function (username, userOrg, isJson) {
 
 };
 
+var isUserRegistered = async function  (username, userOrg) {
+	var client = await getClientForOrg(userOrg);
+	logger.debug('Successfully initialized the credential stores');
+	var user = await client.getUserContext(username, true);
+    if (user && user.isEnrolled()) {
+		console.log(`An identity for the user ${username} exists in the Chertifichain`);
+        var response = {
+			success: true,
+			message: username + ' Success',
+		};
+	} else {
+		// user was not enrolled, so we will need an admin user object to register
+		logger.info(`User ${username} was not enrolled, so we will need an admin user object to register`);
+		var response = {
+			success: false,
+			message: `User with username ${username} is not registered with ${userOrg}, Please register first.`,
+		};
+	}
+    
+	return response;
+}
 
 var setupChaincodeDeploy = function () {
 	process.env.GOPATH = path.join(__dirname, hfc.getConfigSetting('CC_SRC_PATH'));
@@ -110,3 +138,4 @@ exports.getClientForOrg = getClientForOrg;
 exports.getLogger = getLogger;
 exports.setupChaincodeDeploy = setupChaincodeDeploy;
 exports.getRegisteredUser = getRegisteredUser;
+exports.isUserRegistered = isUserRegistered

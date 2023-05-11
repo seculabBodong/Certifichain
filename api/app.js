@@ -1,6 +1,6 @@
 "use strict";
 var log4js = require("log4js");
-var logger = log4js.getLogger("SampleWebApp");
+var logger = log4js.getLogger("Certifichain"); //
 var express = require("express");
 var bodyParser = require("body-parser");
 var http = require("http");
@@ -23,6 +23,7 @@ var helper = require("./app/helper.js");
 // var instantiate = require('./app/instantiate-chaincode.js');
 var invoke = require("./app/invoke-transaction.js");
 var query = require("./app/query.js");
+
 var host = process.env.HOST || hfc.getConfigSetting("host");
 var port = process.env.PORT || hfc.getConfigSetting("port");
 
@@ -43,15 +44,20 @@ app.use(
     secret: "thisismysecret",
     algorithms: ["HS256"],
   }).unless({
-    path: ["/users", "/metrics"],
+    path: ["/users", "/register", "/login", "/home"],
   })
 );
 app.use(bearerToken());
+
+logger.level = 'debug';
+
 app.use(function (req, res, next) {
   logger.debug(" ------>>>>>> new request for %s", req.originalUrl);
   if (
-    req.originalUrl.indexOf("/users") >= 0 ||
-    req.originalUrl.indexOf("/metrics") >= 0
+    	req.originalUrl.indexOf('/users') >= 0 || 
+		req.originalUrl.indexOf('/login') >= 0 || 
+		req.originalUrl.indexOf('/register') >= 0 ||
+    req.originalUrl.indexOf('/home') >= 0
   ) {
     return next();
   }
@@ -110,18 +116,18 @@ app.post("/users", async function (req, res) {
   logger.debug("User name : " + username);
   logger.debug("Org name  : " + orgName);
   if (!username) {
-    res.json(getErrorMessage("'username'"));
+    res.json(getErrorMessage('\'username\''));
     return;
   }
   if (!orgName) {
-    res.json(getErrorMessage("'orgName'"));
+    res.json(getErrorMessage('\'orgName\''));
     return;
   }
   var token = jwt.sign(
     {
       exp:
         Math.floor(Date.now() / 1000) +
-        parseInt(hfc.getConfigSetting("jwt_expiretime")),
+        parseInt(hfc.getConfigSetting("jwt_expiretime")) * 3, //1 jam expiert
       username: username,
       orgName: orgName,
     },
@@ -152,7 +158,94 @@ app.post("/users", async function (req, res) {
   }
 });
 
+// Register and enroll user
+
+app.post('/register', async function (req, res) {
+  var emailUser = req.body.emailUser;
+  var orgName = req.body.orgName;
+
+  logger.debug("User name : " + emailUser);
+  logger.debug("Org name  : " + orgName);
+  if (!emailUser) {
+    res.json(getErrorMessage('\'emailUser\''));
+    return;
+  }
+  if (!orgName) {
+    res.json(getErrorMessage('\'orgName\''));
+    return;
+  }
+
+  let response = await helper.getRegisteredUser(emailUser, orgName, true);
+  logger.debug(
+    "-- returned from registering the emailUser %s for organization %s",
+    emailUser,
+    orgName
+  );
+  if (response && typeof response !== "string") {
+    logger.debug(
+      "Successfully registered the emailUser %s for organization %s",
+      emailUser,
+      orgName
+    );
+
+    res.json(response);
+  } else {
+    logger.debug(
+      "Failed to register the emailUser %s for organization %s with::%s",
+      emailUser,
+      orgName,
+      response
+    );
+    res.json({ success: false, message: response });
+  }
+
+});
+
+// Login and get jwt
+app.post('/login', async function (req, res) {
+  var username = req.body.username;
+  var orgName = req.body.orgName;
+
+  logger.debug('User name : ' + username);
+  logger.debug('Org name  : ' + orgName);
+  if (!username) {
+      res.json(getErrorMessage('\'username\''));
+      return;
+  }
+  if (!orgName) {
+      res.json(getErrorMessage('\'orgName\''));
+      return;
+  }
+
+  var token = jwt.sign(
+    {
+      exp:
+        Math.floor(Date.now() / 1000) +
+        parseInt(hfc.getConfigSetting("jwt_expiretime")) * 3, //1 jam expiert
+      username: username,
+      orgName: orgName,
+    },
+    app.get("secret")
+  );
+
+  let isUserRegistered = await helper.isUserRegistered(username, orgName);
+  
+  if (isUserRegistered.success == true) {
+      isUserRegistered.token = token;
+  } 
+  res.json(isUserRegistered);
+});
+
 // Invoke transaction on chaincode on target peers
+async function _generateRandomID() {
+  let prefix = "";
+  let length = 10;
+  // Generate a New ID
+  let ID = prefix + Math.random().toString(36).substring(2, length);
+
+  return ID.toString();
+}
+
 // CreateAsset
 app.post(
   "/channels/:channelName/chaincodes/:chaincodeName",
@@ -166,10 +259,14 @@ app.post(
       var channelName = req.params.channelName;
       var fcn = req.body.fcn;
       var args = req.body.args;
+      // Generate a New ID  
+      args[0] = await _generateRandomID();
+
       logger.debug("channelName  : " + channelName);
       logger.debug("chaincodeName : " + chaincodeName);
       logger.debug("fcn  : " + fcn);
       logger.debug("args  : " + args);
+      
       if (!chaincodeName) {
         res.json(getErrorMessage("'chaincodeName'"));
         return;
@@ -228,6 +325,9 @@ app.put(
       var channelName = req.params.channelName;
       var fcn = "UpdateAsset";
       var args = req.body.args;
+      // // Generate a New ID  
+      // args[0] = await _generateRandomID();
+
       logger.debug("channelName  : " + channelName);
       logger.debug("chaincodeName : " + chaincodeName);
       logger.debug("fcn  : " + fcn);

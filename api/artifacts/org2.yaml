@@ -50,4 +50,4 @@ client:
       path: "./crypto/org2"
 
     # [Optional]. Specific to Composer environment
-    wallet: wallet-name
+    # wallet: wallet-name
