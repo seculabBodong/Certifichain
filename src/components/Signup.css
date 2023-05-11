@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Readex+Pro&display=swap');
 
 .App{
     height: 100%;
@@ -8,7 +9,7 @@
 /* appAside */
 .appAside{
     width: 30%;
-    background-color: #1A120B;
+    background-color: #041562;
     padding: 0 15px 0px 15px;
 }
 .mainContainer{
@@ -58,7 +59,7 @@
 /* appform */
 .appFormSignup{
     width: 70%;
-    background-color: #E5E5CB;
+    background-color: #EEEEEE;
     padding: 25px 40px;
     padding-top: 4%;
 }
@@ -81,7 +82,7 @@
     font-size: 2em;
     margin-bottom: 20px;
 
-    color: #1A120B;
+    color: #11468F;
 }
 
 .formField {
@@ -99,7 +100,7 @@
     font-weight: 700;
     font-size: 1em;
     line-height: 32px;
-    color: #1A120B;
+    color: #A3A3A3;
 
     margin-bottom: 5px;
 }
@@ -109,8 +110,8 @@
     align-items: start;
     
     background-color: white;
-    border: 1px solid #1E1E1E;
-    border-radius: 8px;
+    border: 1px solid #A3A3A3;
+    border-radius: 4px;
     
     color: #1A120B;
     outline: none;
@@ -134,7 +135,7 @@
     
 }
   .formFieldButton {
-    background-color: #1A120B;
+    background-color: #11468F;
     color: white;
     border: none;
     outline: none;
@@ -152,7 +153,7 @@
     width: 100%;
     padding-top: 15px;
     padding-bottom: 15px;
-    color: #78502D;
+    color: #11468F;
 
   }
 
@@ -160,5 +161,5 @@
     color: #1A120B;
   }
   .signUp{
-    color: #78502D!important;
+    color: #11468F!important;
   }

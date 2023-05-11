@@ -30,15 +30,11 @@ export function Login() {
       {/* <div className="mainContainer1"> */}
         <div className="appAside">
           <div className="logoContainer">
-            <NavLink className="logo">
-              <img src={logo} className="logoImage"/>
-              <div className="logoText">CERTIFICHAIN</div>
-            </NavLink>
           </div>
           <div className="mainContainer">
             <div className="textContainer">
               <div className="side-title">
-                <text>Selamat datang kembali!</text>
+                <text className="readex-pro" style={{color: "white"}}>Selamat datang kembali!</text>
               </div>
               <div className="secondary">
                 <text>
@@ -52,14 +48,14 @@ export function Login() {
         <div className="appForm">
           <div className="formContainer">
             <div className="formTitle"> 
-              <text className="titleLogin">
+              <text className="titleLogin readex-pro">
                 Login
               </text>
             </div>
             <form className="form" onSubmit={Auth}>
               <div className="formField">
                 {isError && <div>{message}</div>}
-                <label className="formFieldLabel" htmlFor="email">
+                <label className="formFieldLabel readex-pro" htmlFor="email">
                   Email
                 </label>
                 <input
@@ -74,7 +70,7 @@ export function Login() {
 
               </div>
               <div className="formField">
-                <label className="formFieldLabel" htmlFor="password">
+                <label className="formFieldLabel readex-pro" htmlFor="password">
                   Password
                 </label>
                 <input

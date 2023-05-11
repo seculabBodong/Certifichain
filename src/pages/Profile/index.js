@@ -53,14 +53,14 @@ export function Profile() {
           <div className="content-middle-profile">
             <div className="profile-content">
               <img src={orgPP} className={"profile-image"}/>
-              <div className="input-logo-container">
+              <div className="input-logo-container-profile">
                 <label for="upload-logo">Pilih File</label>
                 <input type="file" name="file" id="upload-logo" onChange={saveFile}/>
               </div>
             </div>
             <div>
-              <div className="title-profile">Profile Settings</div>
-              <form className="form" onSubmit={""}>
+              <div className="title-profile readex-pro">Profile Settings</div>
+              <form className="form readex-pro" onSubmit={""}>
                 {/* <p>{msg}</p> */}
                 <div className="formField">
                   <label className="formFieldLabel" htmlFor="email">
