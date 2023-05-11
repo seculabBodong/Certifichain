@@ -203,13 +203,13 @@ app.post('/register', async function (req, res) {
 
 // Login and get jwt
 app.post('/login', async function (req, res) {
-  var username = req.body.username;
+  var emailUser = req.body.emailUser;
   var orgName = req.body.orgName;
 
-  logger.debug('User name : ' + username);
+  logger.debug('User name : ' + emailUser);
   logger.debug('Org name  : ' + orgName);
-  if (!username) {
-      res.json(getErrorMessage('\'username\''));
+  if (!emailUser) {
+      res.json(getErrorMessage('\'emailUser\''));
       return;
   }
   if (!orgName) {
@@ -222,13 +222,13 @@ app.post('/login', async function (req, res) {
       exp:
         Math.floor(Date.now() / 1000) +
         parseInt(hfc.getConfigSetting("jwt_expiretime")) * 3, //1 jam expiert
-      username: username,
+        emailUser: emailUser,
       orgName: orgName,
     },
     app.get("secret")
   );
 
-  let isUserRegistered = await helper.isUserRegistered(username, orgName);
+  let isUserRegistered = await helper.isUserRegistered(emailUser, orgName);
   
   if (isUserRegistered.success == true) {
       isUserRegistered.token = token;
