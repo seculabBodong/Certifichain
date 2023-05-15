@@ -44,7 +44,7 @@ app.use(
     secret: "thisismysecret",
     algorithms: ["HS256"],
   }).unless({
-    path: ["/users", "/register", "/login", "/home"],
+    path: ["/users", "/register", "/login"],
   })
 );
 app.use(bearerToken());
@@ -56,8 +56,7 @@ app.use(function (req, res, next) {
   if (
     	req.originalUrl.indexOf('/users') >= 0 || 
 		req.originalUrl.indexOf('/login') >= 0 || 
-		req.originalUrl.indexOf('/register') >= 0 ||
-    req.originalUrl.indexOf('/home') >= 0
+		req.originalUrl.indexOf('/register') >= 0
   ) {
     return next();
   }
@@ -161,13 +160,13 @@ app.post("/users", async function (req, res) {
 // Register and enroll user
 
 app.post('/register', async function (req, res) {
-  var emailUser = req.body.emailUser;
+  var username = req.body.username;
   var orgName = req.body.orgName;
 
-  logger.debug("User name : " + emailUser);
+  logger.debug("User name : " + username);
   logger.debug("Org name  : " + orgName);
-  if (!emailUser) {
-    res.json(getErrorMessage('\'emailUser\''));
+  if (!username) {
+    res.json(getErrorMessage('\'username\''));
     return;
   }
   if (!orgName) {
@@ -175,24 +174,24 @@ app.post('/register', async function (req, res) {
     return;
   }
 
-  let response = await helper.getRegisteredUser(emailUser, orgName, true);
+  let response = await helper.getRegisteredUser(username, orgName, true);
   logger.debug(
-    "-- returned from registering the emailUser %s for organization %s",
-    emailUser,
+    "-- returned from registering the username %s for organization %s",
+    username,
     orgName
   );
   if (response && typeof response !== "string") {
     logger.debug(
-      "Successfully registered the emailUser %s for organization %s",
-      emailUser,
+      "Successfully registered the username %s for organization %s",
+      username,
       orgName
     );
 
     res.json(response);
   } else {
     logger.debug(
-      "Failed to register the emailUser %s for organization %s with::%s",
-      emailUser,
+      "Failed to register the username %s for organization %s with::%s",
+      username,
       orgName,
       response
     );
@@ -203,13 +202,13 @@ app.post('/register', async function (req, res) {
 
 // Login and get jwt
 app.post('/login', async function (req, res) {
-  var emailUser = req.body.emailUser;
+  var username = req.body.username;
   var orgName = req.body.orgName;
 
-  logger.debug('User name : ' + emailUser);
+  logger.debug('User name : ' + username);
   logger.debug('Org name  : ' + orgName);
-  if (!emailUser) {
-      res.json(getErrorMessage('\'emailUser\''));
+  if (!username) {
+      res.json(getErrorMessage('\'username\''));
       return;
   }
   if (!orgName) {
@@ -222,13 +221,13 @@ app.post('/login', async function (req, res) {
       exp:
         Math.floor(Date.now() / 1000) +
         parseInt(hfc.getConfigSetting("jwt_expiretime")) * 3, //1 jam expiert
-        emailUser: emailUser,
+        username: username,
       orgName: orgName,
     },
     app.get("secret")
   );
 
-  let isUserRegistered = await helper.isUserRegistered(emailUser, orgName);
+  let isUserRegistered = await helper.isUserRegistered(username, orgName);
   
   if (isUserRegistered.success == true) {
       isUserRegistered.token = token;
