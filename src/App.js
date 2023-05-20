@@ -10,6 +10,7 @@ import { Verify } from "./pages/Verify";
 import { Signup } from "./pages/Signup";
 import { Profile } from "./pages/Profile";
 import { Event } from "./pages/Event";
+import { Edit_sertifikat } from "./pages/Create";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/verify" element={<Verify />}></Route>
           <Route path="/signup" element={<Signup />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
+          <Route path="/edit_sertifikat" element={<Edit_sertifikat />}></Route>
         </Routes>
       </Router>
     </div>
