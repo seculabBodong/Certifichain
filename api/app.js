@@ -44,7 +44,7 @@ app.use(
     secret: "thisismysecret",
     algorithms: ["HS256"],
   }).unless({
-    path: ["/users", "/register", "/login"],
+    path: ["/users", "/register", "/login", "/home"],
   })
 );
 app.use(bearerToken());
@@ -55,8 +55,9 @@ app.use(function (req, res, next) {
   logger.debug(" ------>>>>>> new request for %s", req.originalUrl);
   if (
     	req.originalUrl.indexOf('/users') >= 0 || 
-		req.originalUrl.indexOf('/login') >= 0 || 
-		req.originalUrl.indexOf('/register') >= 0
+		  req.originalUrl.indexOf('/login') >= 0 || 
+		  req.originalUrl.indexOf('/register') >= 0 ||
+      req.originalUrl.indexOf('/home') >= 0
   ) {
     return next();
   }
@@ -479,14 +480,12 @@ app.get("/home", async function (req, res) {
   args = JSON.parse(args);
   logger.debug(args);
 
-  let message = await query.queryChaincode(
+  let message = await query.readChaicode(
     peer,
     channelName,
     chaincodeName,
     args,
     fcn,
-    req.username,
-    req.orgname
   );
   res.send(message);
 });
