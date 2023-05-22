@@ -135,14 +135,14 @@ chaincodeRandomid() {
     # peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function":"ReadAsset","Args":["random111"]}'
 
     ## asset teesting
-    peer chaincode invoke -o localhost:7050 \
-        --ordererTLSHostnameOverride orderer.example.com \
+    peer chaincode invoke -o localhost:8050 \
+        --ordererTLSHostnameOverride orderer2.example.com \
         --tls $CORE_PEER_TLS_ENABLED \
         --cafile $ORDERER_CA \
         -C $CHANNEL_NAME -n ${CC_NAME} \
         --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_ORG1_CA \
         --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_ORG2_CA \
-        -c '{"function":"CreateAsset","Args":["", "ACARA 2", "Organisasi_Keamanan", "Test 2", "Workshop", "lorem ipsum asdeghtujryewe(contoh)", "eqwkvspdad== (base64)", "qsdaserzxc== (base64)", "qqwgkksddfas== (base64)"]}'
+        -c '{"function":"CreateAsset","Args":["fdsf224", "ACARA 2", "Organisasi_Keamanan", "Test 2", "Workshop", "lorem ipsum asdeghtujryewe(contoh)", "eqwkvspdad== (base64)", "qsdaserzxc== (base64)", "qqwgkksddfas== (base64)"]}'
 }
 
 packageChaincode

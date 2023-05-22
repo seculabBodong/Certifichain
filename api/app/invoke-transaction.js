@@ -58,6 +58,9 @@ var invokeChaincode = async function (peerNames, channelName, chaincodeName, fcn
 		for (var i in proposalResponses) {
 			let one_good = false;
 			logger.debug("Logging proposal Responses", proposalResponses[i])
+			
+			logger.info("APAKAH INI ERROR ?",proposalResponses)
+			
 			if (proposalResponses && proposalResponses[i].response &&
 				proposalResponses[i].response.status === 200) {
 				one_good = true;
@@ -121,6 +124,9 @@ var invokeChaincode = async function (peerNames, channelName, chaincodeName, fcn
 				proposal: proposal
 			};
 			var sendPromise = channel.sendTransaction(orderer_request);
+
+			logger.info("APAKAH ORDERER ERROR ?",orderer_request)
+			
 			// put the send to the orderer last so that the events get registered and
 			// are ready for the orderering and committing
 			promises.push(sendPromise);

@@ -6,6 +6,8 @@ channels:
   mychannel:
     orderers:
       - orderer.example.com
+      - orderer2.example.com
+      - orderer3.example.com
 
     peers:
       peer0.org1.example.com:
