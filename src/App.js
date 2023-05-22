@@ -11,7 +11,7 @@ import { Signup } from "./pages/Signup";
 import { Profile } from "./pages/Profile";
 import { Event } from "./pages/Event";
 import { Edit_sertifikat } from "./pages/Create";
-
+import Qrcode from "./pages/Create/next_hmm";
 function App() {
   return (
     <div>
@@ -26,7 +26,7 @@ function App() {
           <Route path="/verify" element={<Verify />}></Route>
           <Route path="/signup" element={<Signup />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/edit_sertifikat" element={<Edit_sertifikat />}></Route>
+          <Route path="/edit_sertifikat" element={<Qrcode />}></Route>
         </Routes>
       </Router>
     </div>
