@@ -7,7 +7,9 @@ Content-Type: application/json
     "email": "admin@gmail.com",
     "password": "123456",
     "confPassword": "123456",
-    "role": "admin"
+    "role": "admin",
+    "image": "defaultPP.png",
+    "url": "http://localhost:5000/images/defaultPP.png"
 }
 
 ###
