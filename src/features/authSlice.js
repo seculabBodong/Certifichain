@@ -3,6 +3,7 @@ import axios from "axios";
 
 const initialState = {
   user: null,
+  blockchainUser: null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -17,6 +18,26 @@ export const LoginUser = createAsyncThunk(
         email: user.email,
         password: user.password,
       });
+      // document.cookie = `myCookie=${response.data.token}`;
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        const message = error.response.data.msg;
+        return thunkAPI.rejectWithValue(message);
+      }
+    }
+  }
+);
+
+export const LoginBlockchain = createAsyncThunk(
+  "user/loginBlockchain",
+  async (user, thunkAPI) => {
+    try {
+      const response = await axios.post("http://localhost:4000/login", {
+        username: user.email,
+        orgName: user.orgname,
+      });
+      // console.log(response.data);
       return response.data;
     } catch (error) {
       if (error.response) {
@@ -74,6 +95,20 @@ export const authSlice = createSlice({
       state.user = action.payload;
     });
     builder.addCase(getMe.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload;
+    });
+
+    builder.addCase(LoginBlockchain.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(LoginBlockchain.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.blockchainUser = action.payload;
+    });
+    builder.addCase(LoginBlockchain.rejected, (state, action) => {
       state.isLoading = false;
       state.isError = true;
       state.message = action.payload;

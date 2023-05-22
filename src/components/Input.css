@@ -10,9 +10,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #E5E5CB;
+    background-color: #eee;
     width: 40%;
-    height: 100vh;
+    height: 150vh;
     font-size: 22px;
 }
 
