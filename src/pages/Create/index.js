@@ -147,6 +147,60 @@ function downloadURI(uri, name) {
 }
 
 
+function Qrcode (){
+  const [url,setUrl]=useState("");
+  const [qr, setQr]=useState("");
+
+  const GenerateQRcode = () => {
+    QRCode.toDataURL(
+      url,
+      {
+        width : 800,
+        margin : 2,
+        color : {
+          dark :"#00000000",
+          light : "#FFFFFFFF",
+        },
+      },
+      (err, url)=>{
+        if (err) return console.error(err);
+
+        console.log(url);
+        setQr(url);
+        setUrl(value);
+      }
+    );
+  };
+  return(
+    <div>
+      <input
+      type="text"
+      value={url}
+      onChange={(e)=>setUrl(e.target.value)}
+      ></input>
+    <Button 
+    variant='contained'
+    onClick={GenerateQRcode}
+    > dod </Button>
+    {qr && (
+      <>
+      <img src={qr}/>
+      <Button
+      variant='contained'
+      color='success'
+      href={qr}
+      download="qrcode.png"
+      >
+        hahaha
+      </Button>
+
+      </>
+    )}
+    </div>
+  );
+}
+
+
 const panjang = 1080;
 const lebar = 720;
 const placeholder1 =[

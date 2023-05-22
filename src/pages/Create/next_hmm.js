@@ -30,12 +30,13 @@ function Qrcode (){
     };
     return(
       <div>
-         <input
+         {/* <input
         
         value={url}
         onChange={(e)=>setUrl(e.target.value)}
-        ></input> 
+        ></input>  */}
       <Button 
+      onChange={(e)=>setUrl(e.target.value)}
       variant='contained'
       onClick={GenerateQRcode}
       > dod </Button>
