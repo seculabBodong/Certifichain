@@ -1,4 +1,4 @@
-import React, { useState,Component,Fragment } from 'react';
+
 import Papa from 'papaparse';
 //import Book1 from '../../assets'
 //import image1 from "../Create/image1";
@@ -129,11 +129,10 @@ import Papa from 'papaparse';
 // };
 
 
-
+import React, { useState,Component,Fragment } from 'react';
 import { Stage, Layer, Rect, Text, Image } from 'react-konva';
 // import QRCode from 'react-qr-code';
-import QRcode from 'qrcode';
-import { QrCode } from '@mui/icons-material';
+import QRCode from 'qrcode';
 import { Button } from '@mui/material';
 
 const value ="https://youtu.be/dQw4w9WgXcQ"
@@ -153,7 +152,7 @@ function Qrcode (){
 
   const GenerateQRcode = () => {
     QRCode.toDataURL(
-      url,
+      value,
       {
         width : 800,
         margin : 2,
@@ -173,11 +172,6 @@ function Qrcode (){
   };
   return(
     <div>
-      <input
-      type="text"
-      value={url}
-      onChange={(e)=>setUrl(e.target.value)}
-      ></input>
     <Button 
     variant='contained'
     onClick={GenerateQRcode}
@@ -256,51 +250,7 @@ const placeholder1 =[
   },
 ];
 
-function Qrcode (){
-  const [url,setUrl]=useState("");
-  const [qr, setQr]=useState("");
-  const GenerateQRcode = () => {
-    QrCode.toDataURL(
-      url,
-      {
-        width : 800,
-        margin : 2,
-        color : {
-          dark :"black",
-          light : "white",
-        },
-      },
-      (err, url)=>{
-        if (err) return console.error(err);
 
-        console.log(url);
-        setQr(url);
-      }
-    );
-  };
-  return(
-    <div>
-    <Button 
-    variant='contained'
-    onClick={GenerateQRcode}
-    > donwload </Button>
-    {qr && (
-      <>
-      <img src={qr}/>
-      <Button
-      variant='contained'
-      color='success'
-      href={qr}
-      download="qrcode.png"
-      >
-        hahaha
-      </Button>
-
-      </>
-    )}
-    </div>
-  );
-}
 
 export function Edit_sertifikat() {
   const [placeholder12,placeholders]=React.useState(placeholder1);
@@ -313,6 +263,7 @@ export function Edit_sertifikat() {
     console.log(uri);
     downloadURI(uri, 'stage.png');
     
+
     // <QRCode
     // size={256}
     // style={{ height: "auto", maxWidth: 120, width: 120 }}
@@ -322,23 +273,20 @@ export function Edit_sertifikat() {
     // y={lebar/1.2}
     // />
   };
-  // const qrcode =() => {
-  //   <div style={{ height: "100", margin: "0 auto", maxWidth: 150, width: "100%" }}>
-  //   <QRCode
-  //   size={256}
-  //   style={{ height: "100", maxWidth: 200, width: 120 }}
-  //   value={value}
-  //   viewBox={`0 0 256 256`}
-  //   x={panjang/1.2}
-  //   y={lebar/1.2}
-  //   />
-  //   </div>
-  // }
+  const renderQrcode = () => {
+    return (
+      <Qrcode /> // Memanggil komponen Qrcode di sini
+    );
+  };
+
+
   return (
     <div>
     <Fragment>
-    <button onClick={handleExport}>Click here to log stage data URL</button>
-    {Qrcode()}
+    <Button 
+    onClick={handleExport}
+    >Click here to log stage data URL</Button>
+    {renderQrcode()}
     {/* <div style={{ height: "500", margin: "0 auto", maxWidth: 150, width: "100%" }}>
       <QRCode
       size={500}

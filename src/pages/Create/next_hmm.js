@@ -10,7 +10,7 @@ function Qrcode (){
 
     const GenerateQRcode = () => {
       QRCode.toDataURL(
-        url,
+        value,
         {
           width : 800,
           margin : 2,
@@ -36,7 +36,6 @@ function Qrcode (){
         onChange={(e)=>setUrl(e.target.value)}
         ></input>  */}
       <Button 
-      onChange={(e)=>setUrl(e.target.value)}
       variant='contained'
       onClick={GenerateQRcode}
       > dod </Button>
