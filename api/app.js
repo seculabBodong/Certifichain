@@ -27,8 +27,16 @@ var query = require("./app/query.js");
 var host = process.env.HOST || hfc.getConfigSetting("host");
 var port = process.env.PORT || hfc.getConfigSetting("port");
 
-app.options("*", cors());
-app.use(cors());
+// app.options("*", cors());
+// app.use(cors());
+
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000", "http://localhost:5000"], //pake araay [] bila domain kita banyak
+  })
+);
+
 //support parsing of application/json type post data
 app.use(bodyParser.json());
 //support parsing of application/x-www-form-urlencoded post data
@@ -49,15 +57,15 @@ app.use(
 );
 app.use(bearerToken());
 
-logger.level = 'debug';
+logger.level = "debug";
 
 app.use(function (req, res, next) {
   logger.debug(" ------>>>>>> new request for %s", req.originalUrl);
   if (
-    	req.originalUrl.indexOf('/users') >= 0 || 
-		  req.originalUrl.indexOf('/login') >= 0 || 
-		  req.originalUrl.indexOf('/register') >= 0 ||
-      req.originalUrl.indexOf('/home') >= 0
+    req.originalUrl.indexOf("/users") >= 0 ||
+    req.originalUrl.indexOf("/login") >= 0 ||
+    req.originalUrl.indexOf("/register") >= 0 ||
+    req.originalUrl.indexOf("/home") >= 0
   ) {
     return next();
   }
@@ -116,11 +124,11 @@ app.post("/users", async function (req, res) {
   logger.debug("User name : " + username);
   logger.debug("Org name  : " + orgName);
   if (!username) {
-    res.json(getErrorMessage('\'username\''));
+    res.json(getErrorMessage("'username'"));
     return;
   }
   if (!orgName) {
-    res.json(getErrorMessage('\'orgName\''));
+    res.json(getErrorMessage("'orgName'"));
     return;
   }
   var token = jwt.sign(
@@ -160,18 +168,18 @@ app.post("/users", async function (req, res) {
 
 // Register and enroll user
 
-app.post('/register', async function (req, res) {
+app.post("/register", async function (req, res) {
   var username = req.body.username;
   var orgName = req.body.orgName;
 
   logger.debug("User name : " + username);
   logger.debug("Org name  : " + orgName);
   if (!username) {
-    res.json(getErrorMessage('\'username\''));
+    res.json(getErrorMessage("'username'"));
     return;
   }
   if (!orgName) {
-    res.json(getErrorMessage('\'orgName\''));
+    res.json(getErrorMessage("'orgName'"));
     return;
   }
 
@@ -198,23 +206,22 @@ app.post('/register', async function (req, res) {
     );
     res.json({ success: false, message: response });
   }
-
 });
 
 // Login and get jwt
-app.post('/login', async function (req, res) {
+app.post("/login", async function (req, res) {
   var username = req.body.username;
   var orgName = req.body.orgName;
 
-  logger.debug('User name : ' + username);
-  logger.debug('Org name  : ' + orgName);
+  logger.debug("User name : " + username);
+  logger.debug("Org name  : " + orgName);
   if (!username) {
-      res.json(getErrorMessage('\'username\''));
-      return;
+    res.json(getErrorMessage("'username'"));
+    return;
   }
   if (!orgName) {
-      res.json(getErrorMessage('\'orgName\''));
-      return;
+    res.json(getErrorMessage("'orgName'"));
+    return;
   }
 
   var token = jwt.sign(
@@ -222,17 +229,17 @@ app.post('/login', async function (req, res) {
       exp:
         Math.floor(Date.now() / 1000) +
         parseInt(hfc.getConfigSetting("jwt_expiretime")) * 3, //1 jam expiert
-        username: username,
+      username: username,
       orgName: orgName,
     },
     app.get("secret")
   );
 
   let isUserRegistered = await helper.isUserRegistered(username, orgName);
-  
+
   if (isUserRegistered.success == true) {
-      isUserRegistered.token = token;
-  } 
+    isUserRegistered.token = token;
+  }
   res.json(isUserRegistered);
 });
 
@@ -259,14 +266,14 @@ app.post(
       var channelName = req.params.channelName;
       var fcn = req.body.fcn;
       var args = req.body.args;
-      // Generate a New ID  
+      // Generate a New ID
       args[0] = await _generateRandomID();
 
       logger.debug("channelName  : " + channelName);
       logger.debug("chaincodeName : " + chaincodeName);
       logger.debug("fcn  : " + fcn);
       logger.debug("args  : " + args);
-      
+
       if (!chaincodeName) {
         res.json(getErrorMessage("'chaincodeName'"));
         return;
@@ -325,7 +332,7 @@ app.put(
       var channelName = req.params.channelName;
       var fcn = "UpdateAsset";
       var args = req.body.args;
-      // // Generate a New ID  
+      // // Generate a New ID
       // args[0] = await _generateRandomID();
 
       logger.debug("channelName  : " + channelName);
@@ -485,47 +492,55 @@ app.get("/home", async function (req, res) {
     channelName,
     chaincodeName,
     args,
-    fcn,
+    fcn
   );
   res.send(message);
 });
 
 // Query on chaincode on target peers
-app.get('/dashboard', async function (req, res) {
-	logger.debug('==================== QUERY BY CHAINCODE ==================');
-	var channelName = "mychannel";
+app.get("/dashboard", async function (req, res) {
+  logger.debug("==================== QUERY BY CHAINCODE ==================");
+  var channelName = "mychannel";
   var chaincodeName = "basic";
-	let args = req.query.args;
-	let fcn = req.query.fcn;
-	let peer = req.query.peer;
+  let args = req.query.args;
+  let fcn = req.query.fcn;
+  let peer = req.query.peer;
 
-	logger.debug('channelName : ' + channelName);
-	logger.debug('chaincodeName : ' + chaincodeName);
-	logger.debug('fcn : ' + fcn);
-	logger.debug('args : ' + args);
+  logger.debug("channelName : " + channelName);
+  logger.debug("chaincodeName : " + chaincodeName);
+  logger.debug("fcn : " + fcn);
+  logger.debug("args : " + args);
 
-	if (!chaincodeName) {
-		res.json(getErrorMessage('\'chaincodeName\''));
-		return;
-	}
-	if (!channelName) {
-		res.json(getErrorMessage('\'channelName\''));
-		return;
-	}
-	if (!fcn) {
-		res.json(getErrorMessage('\'fcn\''));
-		return;
-	}
-	if (!args) {
-		res.json(getErrorMessage('\'args\''));
-		return;
-	}
-	args = args.replace(/'/g, '"');
-	args = JSON.parse(args);
-	logger.debug(args);
+  if (!chaincodeName) {
+    res.json(getErrorMessage("'chaincodeName'"));
+    return;
+  }
+  if (!channelName) {
+    res.json(getErrorMessage("'channelName'"));
+    return;
+  }
+  if (!fcn) {
+    res.json(getErrorMessage("'fcn'"));
+    return;
+  }
+  if (!args) {
+    res.json(getErrorMessage("'args'"));
+    return;
+  }
+  args = args.replace(/'/g, '"');
+  args = JSON.parse(args);
+  logger.debug(args);
 
-	let message = await query.queryChaincode(peer, channelName, chaincodeName, args, fcn, req.username, req.orgname);
-	res.send(message);
+  let message = await query.queryChaincode(
+    peer,
+    channelName,
+    chaincodeName,
+    args,
+    fcn,
+    req.username,
+    req.orgname
+  );
+  res.send(message);
 });
 
 // Query Get Transaction by Transaction ID
