@@ -22,7 +22,7 @@ export function Dashboard(){
         console.log("ALHAMDULILAH");
         try {
             const response = await axios.get('http://localhost:4000/home?args=[]&peer=peer0.org1.example.com&fcn=GetAllAssets', {withCredentials: false, headers: { 
-                Authorization : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzY5MDcyNzYsInVzZXJuYW1lIjoidGVzdF91c2VyMyIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNjc2ODcxMjc2fQ.yzkE9ZxUkVNDl_cAzDRJxIP_vJTiguyEf4fSmTghpyk'
+                Authorization : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODM4MzU4MjksInVzZXJuYW1lIjoidGVzdF91c2VyMSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNjgzNzk5ODI5fQ.cGtfrvfGft3ezKn43wJQVUxBDIOSRbN1cD3OVjHY_0s'
               }});
             // console.log(response.data);
             setAset(response.data);
