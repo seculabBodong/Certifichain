@@ -1,0 +1,34 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* body{
+  text-align: center;
+  background-color: blue;
+  color: #fff;
+} */
+
+img{
+  display: block;
+  width: 480px;
+  height: 480pc;
+  margin: 2rem auto;
+}
+
+.app{
+  padding: 2rem;
+}
+
+input{
+  appearance: none;
+  outline: none;
+  border: none;
+  background: #eee;
+  width: 100%;
+  max-width: 320px;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  margin-right: 1rem;
+}

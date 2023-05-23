@@ -11,7 +11,7 @@ import { Signup } from "./pages/Signup";
 import { Profile } from "./pages/Profile";
 import { Event } from "./pages/Event";
 import { Edit_sertifikat } from "./pages/Create";
-
+import Qrcode from "./pages/Create/next_hmm";
 function App() {
   return (
     <div>

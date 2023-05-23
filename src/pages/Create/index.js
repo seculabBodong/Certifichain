@@ -1,4 +1,4 @@
-import React, { useState,Component,Fragment } from 'react';
+
 import Papa from 'papaparse';
 //import Book1 from '../../assets'
 //import image1 from "../Create/image1";
@@ -129,9 +129,11 @@ import Papa from 'papaparse';
 // };
 
 
-
+import React, { useState,Component,Fragment } from 'react';
 import { Stage, Layer, Rect, Text, Image } from 'react-konva';
-import QRCode from 'react-qr-code';
+// import QRCode from 'react-qr-code';
+import QRCode from 'qrcode';
+import { Button } from '@mui/material';
 
 const value ="https://youtu.be/dQw4w9WgXcQ"
 function downloadURI(uri, name) {
@@ -141,6 +143,55 @@ function downloadURI(uri, name) {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+}
+
+
+function Qrcode (){
+  const [url,setUrl]=useState("");
+  const [qr, setQr]=useState("");
+
+  const GenerateQRcode = () => {
+    QRCode.toDataURL(
+      value,
+      {
+        width : 800,
+        margin : 2,
+        color : {
+          dark :"#00000000",
+          light : "#FFFFFFFF",
+        },
+      },
+      (err, url)=>{
+        if (err) return console.error(err);
+
+        console.log(url);
+        setQr(url);
+        setUrl(value);
+      }
+    );
+  };
+  return(
+    <div>
+    <Button 
+    variant='contained'
+    onClick={GenerateQRcode}
+    > dod </Button>
+    {qr && (
+      <>
+      <img src={qr}/>
+      <Button
+      variant='contained'
+      color='success'
+      href={qr}
+      download="qrcode.png"
+      >
+        hahaha
+      </Button>
+
+      </>
+    )}
+    </div>
+  );
 }
 
 
@@ -199,13 +250,20 @@ const placeholder1 =[
   },
 ];
 
+
+
 export function Edit_sertifikat() {
   const [placeholder12,placeholders]=React.useState(placeholder1);
   const stageRef = React.useRef(null);
 
+
+
   const handleExport = () => {
     const uri = stageRef.current.toDataURL();
     console.log(uri);
+    downloadURI(uri, 'stage.png');
+    
+
     // <QRCode
     // size={256}
     // style={{ height: "auto", maxWidth: 120, width: 120 }}
@@ -215,20 +273,31 @@ export function Edit_sertifikat() {
     // y={lebar/1.2}
     // />
   };
+  const renderQrcode = () => {
+    return (
+      <Qrcode /> // Memanggil komponen Qrcode di sini
+    );
+  };
+
+
   return (
+    <div>
     <Fragment>
-    <button onClick={handleExport}>Click here to log stage data URL</button>
-    
-    <div style={{ height: "100", margin: "0 auto", maxWidth: 150, width: "100%" }}>
+    <Button 
+    onClick={handleExport}
+    >Click here to log stage data URL</Button>
+    {renderQrcode()}
+    {/* <div style={{ height: "500", margin: "0 auto", maxWidth: 150, width: "100%" }}>
       <QRCode
-      size={256}
-      style={{ height: "100", maxWidth: 200, width: 120 }}
+      size={500}
+      style={{ height: "auto", maxWidth: "100%", width: "100%" }}
       value={value}
       viewBox={`0 0 256 256`}
       x={panjang/1.2}
       y={lebar/1.2}
+      
       />
-      </div>
+      </div> */}
     <Stage 
     width={panjang} 
     height={lebar}
@@ -238,20 +307,11 @@ export function Edit_sertifikat() {
     >
 
     <Layer>
-    <div style={{ height: "100", margin: "0 auto", maxWidth: 150, width: "100%" }}>
-      <QRCode
-      size={256}
-      style={{ height: "100", maxWidth: 200, width: 120 }}
-      value={value}
-      viewBox={`0 0 256 256`}
-      x={panjang/1.2}
-      y={lebar/1.2}
-      />
-      </div>
+
       <Rect
       width={panjang}
       height={lebar}
-      fill='white'
+      //fill='white'
       stroke = 'black'
       strokeWidth = {5}
       />
@@ -263,6 +323,9 @@ export function Edit_sertifikat() {
       height={lebar}
       />
       </React.Fragment> */}
+
+
+
       {placeholder12.map((placeholder1)=>{
         return(
           <Rect 
@@ -279,9 +342,34 @@ export function Edit_sertifikat() {
         )
       })}
 
+    {/* <div style={{ height: "100", margin: "0 auto", maxWidth: 150, width: "100%" }}>
+      <QRCode
+      size={256}
+      style={{ height: "100", maxWidth: 200, width: 120 }}
+      value={value}
+      viewBox={`0 0 256 256`}
+      x={panjang/1.2}
+      y={lebar/1.2}
+      />
+      </div> */}
+
     </Layer>
   </Stage>
   </Fragment>
+
+  <Fragment >
+  {/* <div style={{ height: "100", margin: "0 auto", maxWidth: 150, width: "100%" }}>
+      <QRCode
+      size={256}
+      style={{ height: "100", maxWidth: 200, width: 120 }}
+      value={value}
+      viewBox={`0 0 256 256`}
+      x={panjang/1.2}
+      y={lebar/1.2}
+      />
+      </div> */}
+  </Fragment>
+  </div>
 );
 };
 
