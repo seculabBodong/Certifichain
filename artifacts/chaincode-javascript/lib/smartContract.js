@@ -499,10 +499,24 @@ class AssetTransfer extends Contract {
         console.log(res.value.value.toString("utf8"));
         if (isHistory && isHistory === true) {
           // jsonRes.Timestamp = res.value.timestamp;
+          let dateTime = new Date(res.value.timestamp.seconds * 1000).toISOString();
+          
+          let options = {
+            timeZone: 'Asia/Jakarta',
+            timeZoneName: 'short',
+            hour12: false,
+            weekday: 'short',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric'
+          };
+
+          dateTime = new Date(dateTime).toLocaleString('id-ID', options);
           time.push(
-            new Date(
-              res.value.timestamp.seconds * 1000
-            ).toISOString()
+            dateTime
           );
           
         } else {
