@@ -17,12 +17,19 @@ import Paper from "@mui/material/Paper";
 import axios from "axios";
 import { store } from "../../app/store";
 import { LoginBlockchain } from "../../features/authSlice";
+import iconpdf from "../../assets/file-download.png";
+import iconcheck from "../../assets/icon_checkmark.png";
+import iconcross from "../../assets/close-circle.png";
 
 export function Home() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [aset, setAset] = useState([]);
+  const [userList, setUserList] = useState([]);
+  const [userApprove, setUserApprove] = useState([]);
+  const [userNotApprove, setUserNotApprove] = useState([]);
   const [email, setEmail] = useState(null);
+  const [role, setRole] = useState("");
   const [orgname, setOrgname] = useState("Org1");
   const { isError } = useSelector((state) => state.auth);
   const { user } = useSelector((state) => state.auth);
@@ -33,6 +40,14 @@ export function Home() {
     dispatch(getMe());
     getAsset();
   }, [dispatch]);
+
+  useEffect(() => {
+    // console.log(user.role);
+    if (user) {
+      setRole(user.role);
+    }
+    getUser();
+  }, [user, userList]);
 
   function getCookie(cName) {
     const name = cName + "=";
@@ -49,7 +64,7 @@ export function Home() {
     console.log("ALHAMDULILAH");
     try {
       const response = await axios.get(
-        `http://localhost:4000/home?args=["Organisasi pertahanan"]&peer=peer0.org1.example.com&fcn=AssetByOrganisasi`,
+        `http://localhost:4000/home?args=["Organisasi_Pertahanan"]&peer=peer0.org1.example.com&fcn=AssetByOrganisasi`,
         {
           withCredentials: false,
           headers: {
@@ -59,7 +74,7 @@ export function Home() {
       );
       // console.log(response.data);
       setAset(response.data);
-      console.log(aset);
+      // console.log(aset);
       return response.data;
     } catch (error) {
       if (error.response) {
@@ -69,7 +84,34 @@ export function Home() {
       }
     }
   };
+
+  const getUser = async () => {
+    console.log("MANTAP");
+    try {
+      const response = await axios.get(`http://localhost:5000/users`);
+      // console.log(response.data);
+      setUserList(response.data);
+      const filterApprove = userList.filter(
+        (resp) => resp.status == "approved"
+      );
+      setUserApprove(filterApprove);
+      const filterNotApprove = userList.filter(
+        (resp) => resp.status == "not_approved"
+      );
+      setUserNotApprove(filterNotApprove);
+      // console.log(aset);
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        const message = error.response.data.msg;
+        console.log("OH NO");
+        return message;
+      }
+    }
+  };
   // console.log(currentState);
+  console.log(userApprove);
+  console.log(userNotApprove);
 
   return (
     <>
@@ -103,7 +145,7 @@ export function Home() {
           </div>
         </div>
       )}
-      {user && (
+      {role == "client" && (
         <div className="dashboard-container">
           <div className="dashboard-content">
             <div
@@ -156,6 +198,107 @@ export function Home() {
                     </TableBody>
                   </Table>
                 </TableContainer>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {role == "admin" && (
+        <div>
+          <div style={{ height: "100%" }} className="dashboard-container">
+            <div className="dashboard-content">
+              <div className="dashboard-certlist">
+                <div
+                  style={{ fontSize: 32, fontWeight: "bold" }}
+                  className="readex-pro"
+                >
+                  Approve organisasi yang terpercaya
+                </div>
+                <div style={{ margin: "1%" }}>
+                  <table>
+                    <tr>
+                      <th>Organization</th>
+                      <th>Email</th>
+                      <th>Support File</th>
+                      <th>Status</th>
+                      <th>Approve</th>
+                    </tr>
+                    {userNotApprove.map((home) => (
+                      <tr>
+                        <td>{home.name}</td>
+                        <td>{home.email}</td>
+                        <td className="center-td">
+                          <img
+                            src={iconpdf}
+                            className="dashboard-optionbox-icon"
+                          />
+                        </td>
+                        <td>{home.status}</td>
+                        <td>
+                          <div>
+                            <img
+                              src={iconcheck}
+                              className="dashboard-optionbox-icon"
+                            />
+                            <img
+                              src={iconcross}
+                              className="dashboard-optionbox-icon"
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="dashboard-container">
+            <div className="dashboard-content">
+              <div className="dashboard-certlist">
+                <div
+                  style={{ fontSize: 32, fontWeight: "bold" }}
+                  className="readex-pro"
+                >
+                  Organisasi yang terpercaya
+                </div>
+                <div style={{ margin: "1%" }}>
+                  <table>
+                    <tr>
+                      <th>Organization</th>
+                      <th>Email</th>
+                      <th>Support File</th>
+                      <th>Status</th>
+                      <th>Approve</th>
+                    </tr>
+                    {userApprove.map((home) => (
+                      <tr>
+                        <td>{home.name}</td>
+                        <td>{home.email}</td>
+                        <td className="center-td">
+                          <img
+                            src={iconpdf}
+                            className="dashboard-optionbox-icon"
+                          />
+                        </td>
+                        <td>{home.status}</td>
+                        <td>
+                          <div>
+                            <img
+                              src={iconcheck}
+                              className="dashboard-optionbox-icon"
+                            />
+                            <img
+                              src={iconcross}
+                              className="dashboard-optionbox-icon"
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </table>
+                </div>
               </div>
             </div>
           </div>

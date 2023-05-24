@@ -9,7 +9,7 @@ import logo from "../../assets/logoIcon.png";
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [orgname, setOrgname] = useState("Org1");
+  const [orgname, setOrgname] = useState("Org2");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, blockchainUser, isError, isSuccess, isLoading, message } =

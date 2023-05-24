@@ -154,8 +154,13 @@ table {
 }
 
 .dashboard-optionbox-icon {
-    width: 3vw;
+    width: 2vw;
 }
+
+.center-td {
+    padding-left: 3%;
+}
+
 
 .dashboard-certlist {
     display: flex;
