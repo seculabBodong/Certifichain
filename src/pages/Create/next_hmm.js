@@ -2,12 +2,19 @@ import  QRCode  from 'qrcode';
 import { Button } from '@mui/material';
 import React, { useState,Component,Fragment } from 'react';
 import './next_hmm.css'
+import { useLocation } from 'react-router-dom';
+
 
 const value ="https://youtu.be/dQw4w9WgXcQ"
 function Qrcode (){
     const [url,setUrl]=useState("");
     const [qr, setQr]=useState("");
-
+    const location=useLocation();
+    const coba_luar =() =>{
+      
+      const data = location.state.data;
+      console.log(data);
+    }
     const GenerateQRcode = () => {
       QRCode.toDataURL(
         value,
@@ -39,6 +46,7 @@ function Qrcode (){
       variant='contained'
       onClick={GenerateQRcode}
       > dod </Button>
+      {coba_luar()}
       {qr && (
         <>
         <img src={qr}/>
