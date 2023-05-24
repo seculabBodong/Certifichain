@@ -154,13 +154,22 @@ class AssetTransfer extends Contract {
 
     // const timestamp = ctx.stub.getTxTimestamp();
     const history = await ctx.stub.getHistoryForKey(idCert);
-    let hist = await history.next();
-    asset.timestamp = new Date(
-      hist.value.timestamp.seconds * 1000
-    ).toISOString();
+    let hist = await this._HistoryTime(history, true);
+    asset.time = hist;
+
+    // let hist = await history.next();
+   
+    // asset.createDate = new Date(
+    //   hist[0].value.timestamp.seconds * 1000
+    // ).toISOString();
+
+    // asset.lastModified = new Date(
+    //   hist.value.timestamp.seconds * 1000
+    // ).toISOString();
+
     // asset.timestamp = timestamp;
 
-    asset.TxId = hist.value.txId;
+    // asset.TxId = hist.value.txId;
 
     return JSON.stringify(asset);
   }
@@ -374,7 +383,10 @@ class AssetTransfer extends Contract {
       console.log(objectType);
       let idCert = attributes[1];
       let assetAsBytes = await ctx.stub.getState(idCert);
-
+      // Time rocord
+      const history = await ctx.stub.getHistoryForKey(idCert);
+      let hist = await this._HistoryTime(history, true);
+      
       const strValue = Buffer.from(assetAsBytes.toString());
       let record;
       try {
@@ -383,6 +395,7 @@ class AssetTransfer extends Contract {
         console.log(err);
         record = strValue;
       }
+      record.time = hist;
       allResults.push(record);
       responseRange = await organisasiAssetResultsIterator.next();
     }
@@ -414,6 +427,10 @@ class AssetTransfer extends Contract {
       let idCert = attributes[1];
       let assetAsBytes = await ctx.stub.getState(idCert);
 
+      // Time rocord
+      const history = await ctx.stub.getHistoryForKey(idCert);
+      let hist = await this._HistoryTime(history, true);
+
       const strValue = Buffer.from(assetAsBytes.toString());
       let record;
       try {
@@ -422,6 +439,7 @@ class AssetTransfer extends Contract {
         console.log(err);
         record = strValue;
       }
+      record.time = hist;
       allResults.push(record);
       responseRange = await acaraAssetResultsIterator.next();
     }
@@ -453,6 +471,10 @@ class AssetTransfer extends Contract {
       let idCert = attributes[1];
       let assetAsBytes = await ctx.stub.getState(idCert);
 
+      // Time rocord
+      const history = await ctx.stub.getHistoryForKey(idCert);
+      let hist = await this._HistoryTime(history, true);
+
       const strValue = Buffer.from(assetAsBytes.toString());
       let record;
       try {
@@ -461,10 +483,52 @@ class AssetTransfer extends Contract {
         console.log(err);
         record = strValue;
       }
+      record.time = hist;
       allResults.push(record);
       responseRange = await namaAssetResultsIterator.next();
     }
     return JSON.stringify(allResults);
+  }
+  
+  async _HistoryTime(iterator, isHistory){
+    let time = [];
+    let res = await iterator.next();
+    let jsonRes = {};
+    while (!res.done) {
+      if (res.value && res.value.value.toString()) {
+        console.log(res.value.value.toString("utf8"));
+        if (isHistory && isHistory === true) {
+          // jsonRes.Timestamp = res.value.timestamp;
+          time.push(
+            new Date(
+              res.value.timestamp.seconds * 1000
+            ).toISOString()
+          );
+          
+        } else {
+          jsonRes.Key = res.value.key;
+          try {
+            jsonRes.Record = JSON.parse(res.value.value.toString("utf8"));
+          } catch (err) {
+            console.log(err);
+            jsonRes.Record = res.value.value.toString("utf8");
+          }
+        }
+      }
+      res = await iterator.next();
+    }
+
+    let lastIndex = time.length -1;
+    if (lastIndex > 0){
+      jsonRes.createDate = time[lastIndex];
+      jsonRes.lastModified =  time[0];
+    }else{
+      jsonRes.createDate = time[0];
+      jsonRes.lastModified =  time[0];
+    }
+
+    iterator.close();
+    return jsonRes;
   }
 
   async _GetAllResults(iterator, isHistory) {
