@@ -10,11 +10,13 @@ function Qrcode (){
     const [url,setUrl]=useState("");
     const [qr, setQr]=useState("");
     const location=useLocation();
-    const coba_luar =() =>{
+    const data = location.state.data;
+    console.log(data);
+    // const coba_luar =() =>{
       
-      const data = location.state.data;
-      console.log(data);
-    }
+    //   const data = location.state.data;
+    //   console.log(data);
+    // }
     const GenerateQRcode = () => {
       QRCode.toDataURL(
         value,
@@ -46,7 +48,7 @@ function Qrcode (){
       variant='contained'
       onClick={GenerateQRcode}
       > dod </Button>
-      {coba_luar()}
+      {/* {coba_luar()} */}
       {qr && (
         <>
         <img src={qr}/>

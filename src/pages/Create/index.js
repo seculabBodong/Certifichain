@@ -134,7 +134,7 @@ import { Stage, Layer, Rect, Text, Image } from 'react-konva';
 // import QRCode from 'react-qr-code';
 import QRCode from 'qrcode';
 import { Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 const value ="https://youtu.be/dQw4w9WgXcQ"
 function downloadURI(uri, name) {
@@ -256,20 +256,26 @@ const placeholder1 =[
 export function Edit_sertifikat() {
   const [placeholder12,placeholders]=React.useState(placeholder1);
   const stageRef = React.useRef(null);
-
+  //const history = useHistory();
+  const [showLink, setShowLink] = useState(false);
 
 
   const handleExport = () => {
     const uri = stageRef.current.toDataURL();
     console.log(uri);
     //downloadURI(uri, 'stage.png');
-    
-    return(
-      <Link to={{
-        pathname : '/next_hmm.js',
-        state : {data:uri}
-      }}/>
-    );
+    setShowLink(true);
+    // return(
+    //   <div>
+    //   <Link to={{
+    //     pathname : '/next_hmm.js',
+    //     state : {data:uri}
+    //   }}>
+    //     <Button variant="contained">Halaman Berikutnya</Button>
+
+    //   </Link>
+    //   </div>
+    // );
 
   };
   const renderQrcode = () => {
@@ -287,6 +293,14 @@ export function Edit_sertifikat() {
     >
 
       Click here to log stage data URL</Button>
+      {showLink && (
+          <Link to={{
+            pathname: '../../next_hmm.js',
+            state: { data: console.log(stageRef.current.toDataURL()) }
+          }}>
+            Go to Next Page
+          </Link>
+        )}
     {renderQrcode()}
     {/* <div style={{ height: "500", margin: "0 auto", maxWidth: 150, width: "100%" }}>
       <QRCode
@@ -357,19 +371,9 @@ export function Edit_sertifikat() {
     </Layer>
   </Stage>
   </Fragment>
-
-  <Fragment >
-  {/* <div style={{ height: "100", margin: "0 auto", maxWidth: 150, width: "100%" }}>
-      <QRCode
-      size={256}
-      style={{ height: "100", maxWidth: 200, width: 120 }}
-      value={value}
-      viewBox={`0 0 256 256`}
-      x={panjang/1.2}
-      y={lebar/1.2}
-      />
-      </div> */}
-  </Fragment>
+  {/* <div>
+  {handleExport()}
+  </div> */}
   </div>
 );
 };
