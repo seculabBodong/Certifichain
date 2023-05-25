@@ -134,7 +134,8 @@ import { Stage, Layer, Rect, Text, Image } from 'react-konva';
 // import QRCode from 'react-qr-code';
 import QRCode from 'qrcode';
 import { Button } from '@mui/material';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory,Route,Routes } from 'react-router-dom';
+import Qrcode1 from '../asd/index';
 
 const value ="https://youtu.be/dQw4w9WgXcQ"
 function downloadURI(uri, name) {
@@ -295,12 +296,16 @@ export function Edit_sertifikat() {
       Click here to log stage data URL</Button>
       {showLink && (
           <Link to={{
-            pathname: '../../next_hmm.js',
+            pathname: '../asd/index.js',
             state: { data: console.log(stageRef.current.toDataURL()) }
           }}>
             Go to Next Page
+            <Routes>
+          <Route path="/asdasd" element={<Qrcode1 />} />
+          </Routes>
           </Link>
         )}
+
     {renderQrcode()}
     {/* <div style={{ height: "500", margin: "0 auto", maxWidth: 150, width: "100%" }}>
       <QRCode
