@@ -130,12 +130,17 @@ import Papa from 'papaparse';
 
 
 import React, { useState,Component,Fragment } from 'react';
-import { Stage, Layer, Rect, Text, Image } from 'react-konva';
+import { Stage, Layer, Rect, Text, Image, Transformer } from 'react-konva';
 // import QRCode from 'react-qr-code';
 import QRCode from 'qrcode';
 import { Button } from '@mui/material';
-import { Link, useHistory,Route,Routes } from 'react-router-dom';
-import Qrcode1 from '../asd/index';
+import { Link, useHistory } from 'react-router-dom';
+import useImage from 'use-image';
+import index from './index.json'
+import image1 from './image1.jpg'
+import LayeredImage from "react-layered-image";
+
+
 
 const value ="https://youtu.be/dQw4w9WgXcQ"
 function downloadURI(uri, name) {
@@ -197,8 +202,16 @@ function Qrcode (){
 }
 
 
-const panjang = 1080;
-const lebar = 720;
+
+
+const panjang = 1280;
+const lebar = 837.82;
+
+const images = [
+  // index.qr,
+  // index.template,
+  image1,
+];
 const placeholder1 =[
   {
     x: panjang/7,
@@ -251,21 +264,37 @@ const placeholder1 =[
     id:'ttd2',
   },
 ];
-
+const style = {
+  position: "absolute",
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+};
 
 
 export function Edit_sertifikat() {
   const [placeholder12,placeholders]=React.useState(placeholder1);
+  const [tertata,setTertata]=React.useState(images);
   const stageRef = React.useRef(null);
   //const history = useHistory();
   const [showLink, setShowLink] = useState(false);
+
 
 
   const handleExport = () => {
     const uri = stageRef.current.toDataURL();
     console.log(uri);
     //downloadURI(uri, 'stage.png');
-    setShowLink(true);
+    // setShowLink(true);
+    // const isigambar=[
+    //   {imgg : uri,}
+    // ]
+    // const fs =require('fs');
+    // fs.writeFileSync('dataimg,json',JSON.stringify(isigambar),'utf-8')
     // return(
     //   <div>
     //   <Link to={{
@@ -287,25 +316,28 @@ export function Edit_sertifikat() {
 
 
   return (
-    <div>
+    <div style={style}>
+      <div style={{height:'100',  width: "100%", backgroundImage:image1}}>
+      {/* <img src={image1}/> */}
+      <img src={index.template}/>
+      </div>
+      
     <Fragment>
     <Button 
     onClick={handleExport}
+    ref={stageRef}
     >
 
       Click here to log stage data URL</Button>
-      {showLink && (
+      {/* {showLink && (
           <Link to={{
-            pathname: '../asd/index.js',
+            
+            pathname: '../../asd/next_hmm.js',
             state: { data: console.log(stageRef.current.toDataURL()) }
           }}>
             Go to Next Page
-            <Routes>
-          <Route path="/asdasd" element={<Qrcode1 />} />
-          </Routes>
           </Link>
-        )}
-
+        )} */}
     {renderQrcode()}
     {/* <div style={{ height: "500", margin: "0 auto", maxWidth: 150, width: "100%" }}>
       <QRCode
@@ -323,7 +355,7 @@ export function Edit_sertifikat() {
     height={lebar}
     visible={true}
     opacity={10}
-    ref={stageRef}
+    // ref={stageRef}
     >
 
     <Layer>
@@ -335,7 +367,11 @@ export function Edit_sertifikat() {
       stroke = 'black'
       strokeWidth = {5}
       />
-
+       {/* {tertata.map((imageUrl, index) => {
+        return(
+          <Image key={index} image={images}/>
+        )
+       })} */}
       {/* <React.Fragment>
       <Image
       image={image1}
@@ -375,7 +411,7 @@ export function Edit_sertifikat() {
 
     </Layer>
   </Stage>
-  </Fragment>
+  </Fragment> 
   {/* <div>
   {handleExport()}
   </div> */}

@@ -3,20 +3,22 @@ import { Button } from '@mui/material';
 import React, { useState,Component,Fragment } from 'react';
 import './next_hmm.css'
 import { useLocation } from 'react-router-dom';
-
+import index from "./index.json"
+import { Height } from '@mui/icons-material';
 
 const value ="https://youtu.be/dQw4w9WgXcQ"
 function Qrcode (){
     const [url,setUrl]=useState("");
     const [qr, setQr]=useState("");
-    const location=useLocation();
-    const data = location.state.data;
-    console.log(data);
+    // const location=useLocation();
+    // const data = location.state.data;
+    //console.log(index.template);
     // const coba_luar =() =>{
       
     //   const data = location.state.data;
     //   console.log(data);
     // }
+    const template = index.template
     const GenerateQRcode = () => {
       QRCode.toDataURL(
         value,
@@ -38,7 +40,8 @@ function Qrcode (){
       );
     };
     return(
-      <div>
+      <div >
+        <img height={window.innerHeight} width={window.innerWidth} src={template}/>
          {/* <input
         
         value={url}
@@ -48,10 +51,12 @@ function Qrcode (){
       variant='contained'
       onClick={GenerateQRcode}
       > dod </Button>
+   
       {/* {coba_luar()} */}
       {qr && (
         <>
         <img src={qr}/>
+
         <Button
         variant='contained'
         color='success'
