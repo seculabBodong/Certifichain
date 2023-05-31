@@ -64,7 +64,7 @@ export function Home() {
     console.log("ALHAMDULILAH");
     try {
       const response = await axios.get(
-        `http://localhost:4000/home?args=["Organisasi_Pertahanan"]&peer=peer0.org1.example.com&fcn=AssetByOrganisasi`,
+        `http://localhost:4000/home?args=["Organisasi_Keamanan"]&peer=peer0.org1.example.com&fcn=AssetByOrganisasi`,
         {
           withCredentials: false,
           headers: {
