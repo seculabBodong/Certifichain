@@ -57,6 +57,18 @@ export function Signup() {
         //   },
         // }
       );
+      await axios.post(
+        "http://localhost:4000/register",
+        {
+          username: email,
+          orgName: "Org2",
+        }
+        // , {
+        //   headers: {
+        //     "Content-Type": "multipart/form-data",
+        //   },
+        // }
+      );
       navigate("/login");
     } catch (error) {
       if (error.response) {
@@ -106,12 +118,7 @@ export function Signup() {
           <div className="formTitle">
             <text className="titleLogin">Sign Up</text>
           </div>
-          <form
-            className="form"
-            onSubmit={() => {
-              handleSubmit();
-            }}
-          >
+          <form className="form" onSubmit={saveUser}>
             <p>{msg}</p>
             <div className="formField">
               <label className="formFieldLabel" htmlFor="email">
@@ -147,7 +154,6 @@ export function Signup() {
               </label>
               <input
                 type="password"
-                id="password"
                 className="formFieldInput"
                 placeholder="Enter your password"
                 value={password}
@@ -161,7 +167,6 @@ export function Signup() {
               </label>
               <input
                 type="password"
-                id="password"
                 className="formFieldInput"
                 placeholder="Enter your password"
                 value={confPassword}
@@ -182,7 +187,7 @@ export function Signup() {
             <div className="formFieldButtoms">
               <button type="submit" className="formFieldButton">
                 Submit
-              </button>{" "}
+              </button>
             </div>
           </form>
         </div>
