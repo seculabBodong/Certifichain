@@ -15,9 +15,10 @@ export const Login = async (req, res) => {
   const name = user.name;
   const email = user.email;
   const role = user.role;
+  const status = user.status;
   const image = user.image;
   const url = user.url;
-  res.status(200).json({ uuid, name, email, role, role, image, url });
+  res.status(200).json({ uuid, name, email, role, role, status, image, url });
 };
 
 export const Me = async (req, res) => {
@@ -25,7 +26,7 @@ export const Me = async (req, res) => {
     return res.status(401).json({ msg: "mohon login ke akun anda!" });
   }
   const user = await Users.findOne({
-    attributes: ["uuid", "name", "email", "role", "image", "url"],
+    attributes: ["uuid", "name", "email", "role", "status", "image", "url"],
     where: {
       uuid: req.session.userId,
     },

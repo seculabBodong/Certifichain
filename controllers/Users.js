@@ -5,7 +5,7 @@ import path from "path";
 export const getUsers = async (req, res) => {
   try {
     const response = await Users.findAll({
-      attributes: ["uuid", "name", "email", "role", "image", "url"],
+      attributes: ["uuid", "name", "email", "role", "status", "image", "url"],
     });
     res.status(200).json(response);
   } catch (error) {
@@ -16,7 +16,7 @@ export const getUsers = async (req, res) => {
 export const getUserById = async (req, res) => {
   try {
     const response = await Users.findOne({
-      attributes: ["uuid", "name", "email", "role", "image", "url"],
+      attributes: ["uuid", "name", "email", "role", "status", "image", "url"],
       where: {
         uuid: req.params.id,
       },
@@ -28,7 +28,7 @@ export const getUserById = async (req, res) => {
 };
 
 export const createUser = async (req, res) => {
-  const { name, email, password, confPassword, role, image, url } = req.body;
+  const { name, email, password, confPassword, role } = req.body;
   if (password != confPassword)
     return res.status(400).json({
       msg: "Password dan confirm password tidak cocok",
@@ -40,6 +40,7 @@ export const createUser = async (req, res) => {
       email: email,
       password: hashPassword,
       role: role,
+      status: "not_approved",
       image: "defaultPP.png",
       url: "http://localhost:5000/images/defaultPP.png",
     });
@@ -82,6 +83,31 @@ export const updateUser = async (req, res) => {
       }
     );
     res.status(200).json({ msg: "User Upated" });
+  } catch (error) {
+    res.status(400).json({ msg: error.message });
+  }
+};
+
+export const updateApprove = async (req, res) => {
+  const user = await Users.findOne({
+    where: {
+      uuid: req.params.id,
+    },
+  });
+  if (!user) return res.status(404).json({ msg: "user tidak ditemukan" });
+  const { name, email, role, status } = req.body;
+  try {
+    await Users.update(
+      {
+        status: status,
+      },
+      {
+        where: {
+          id: user.id,
+        },
+      }
+    );
+    res.status(200).json({ msg: "User Status Upated" });
   } catch (error) {
     res.status(400).json({ msg: error.message });
   }
