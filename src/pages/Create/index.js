@@ -278,7 +278,6 @@ const style = {
 
 export function Edit_sertifikat() {
   const [placeholder12,placeholders]=React.useState(placeholder1);
-  const [tertata,setTertata]=React.useState(images);
   const stageRef = React.useRef(null);
   //const history = useHistory();
   const [showLink, setShowLink] = useState(false);
@@ -317,7 +316,7 @@ export function Edit_sertifikat() {
 
   return (
     <div style={style}>
-      <div style={{height:'100',  width: "100%", backgroundImage:image1}}>
+      <div style={{height:'100',  width: "100%"}}>
       {/* <img src={image1}/> */}
       <img src={index.template}/>
       </div>
@@ -329,15 +328,6 @@ export function Edit_sertifikat() {
     >
 
       Click here to log stage data URL</Button>
-      {/* {showLink && (
-          <Link to={{
-            
-            pathname: '../../asd/next_hmm.js',
-            state: { data: console.log(stageRef.current.toDataURL()) }
-          }}>
-            Go to Next Page
-          </Link>
-        )} */}
     {renderQrcode()}
     {/* <div style={{ height: "500", margin: "0 auto", maxWidth: 150, width: "100%" }}>
       <QRCode
