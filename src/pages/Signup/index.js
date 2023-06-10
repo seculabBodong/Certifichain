@@ -97,8 +97,8 @@ export function Signup() {
       <div className="appAside">
         <div className="logoContainer">
           <NavLink className="logo">
-            <img src={logo} className="logoImage" />
-            <div className="logoText">CERTIFICHAIN</div>
+            {/* <img src={logo} className="logoImage" /> */}
+            {/* <div className="logoText">CERTIFICHAIN</div> */}
           </NavLink>
         </div>
         <div className="mainContainer">

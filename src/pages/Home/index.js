@@ -20,6 +20,7 @@ import { LoginBlockchain } from "../../features/authSlice";
 import iconpdf from "../../assets/file-download.png";
 import iconcheck from "../../assets/icon_checkmark.png";
 import iconcross from "../../assets/close-circle.png";
+import { handleApprove, handleNotApprove } from "../../features/adminService"
 
 export function Home() {
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ export function Home() {
   const [userNotApprove, setUserNotApprove] = useState([]);
   const [email, setEmail] = useState(null);
   const [role, setRole] = useState("");
+  const [ status, setStatus ] = useState("");
   const [orgname, setOrgname] = useState("Org1");
   const { isError } = useSelector((state) => state.auth);
   const { user } = useSelector((state) => state.auth);
@@ -39,15 +41,17 @@ export function Home() {
   useEffect(() => {
     dispatch(getMe());
     getAsset();
+    
   }, [dispatch]);
 
   useEffect(() => {
     // console.log(user.role);
     if (user) {
       setRole(user.role);
+      setStatus(user.status);
     }
     getUser();
-  }, [user, userList]);
+  }, [user, role]);
 
   function getCookie(cName) {
     const name = cName + "=";
@@ -64,7 +68,7 @@ export function Home() {
     console.log("ALHAMDULILAH");
     try {
       const response = await axios.get(
-        `http://localhost:4000/home?args=["Organisasi_Keamanan"]&peer=peer0.org1.example.com&fcn=AssetByOrganisasi`,
+        `http://localhost:4000/dashboard?args=["Organisasi_Keamanan"]&peer=peer0.org1.example.com&fcn=AssetByOrganisasi`,
         {
           withCredentials: false,
           headers: {
@@ -110,28 +114,19 @@ export function Home() {
     }
   };
   // console.log(currentState);
-  console.log(userApprove);
-  console.log(userNotApprove);
+  // console.log(userApprove);
+  // console.log(userNotApprove);
 
   return (
     <>
       {!user && (
         <div className="container">
-          {/* <img src={award} style={{width : 200, position: "absolute"}}/> */}
           <div className="content">
             <div className="text-title">SELAMAT DATANG!</div>
             <div className="text-content">
               Certifichain adalah web yang membantu anda verifikasi sertifikat
               dengan mudah
             </div>
-            {/* <div className="get-started">
-                  <Link
-                    to="/verify"
-                    style={{ textDecoration: "none", color: "black" }}
-                  >
-                    Get Started
-                  </Link>
-                </div> */}
             <div className="input-container-home">
               <div className="input-container2">
                 <text>Scan Sertifikatmu</text>
@@ -145,7 +140,7 @@ export function Home() {
           </div>
         </div>
       )}
-      {role == "client" && (
+      {(status == "approved" && role == "client" ) && (
         <div className="dashboard-container">
           <div className="dashboard-content">
             <div
@@ -203,7 +198,19 @@ export function Home() {
           </div>
         </div>
       )}
-      {role == "admin" && (
+      {status == "not_approved" && (
+        <div className="belum-approve-container">
+          <div className="belum-approve readex-pro">
+            <img
+              src={iconcross}
+              className="dashboard-optionbox-icon"
+            />
+            <div>Anda belum terverifikasi!</div>
+            <div>Harap menunggu proses approval</div>
+          </div>
+        </div>
+      )}
+      {(status == "approved" && role == "admin" ) && (
         <div>
           <div style={{ height: "100%" }} className="dashboard-container">
             <div className="dashboard-content">
@@ -239,10 +246,12 @@ export function Home() {
                             <img
                               src={iconcheck}
                               className="dashboard-optionbox-icon"
+                              onClick={() => handleApprove(home.uuid)}
                             />
                             <img
                               src={iconcross}
                               className="dashboard-optionbox-icon"
+                              onClick={() => handleNotApprove(home.uuid)}
                             />
                           </div>
                         </td>
@@ -270,7 +279,7 @@ export function Home() {
                       <th>Email</th>
                       <th>Support File</th>
                       <th>Status</th>
-                      <th>Approve</th>
+                      <th>Cancel Approve</th>
                     </tr>
                     {userApprove.map((home) => (
                       <tr>
@@ -285,13 +294,15 @@ export function Home() {
                         <td>{home.status}</td>
                         <td>
                           <div>
-                            <img
+                            {/* <img
                               src={iconcheck}
                               className="dashboard-optionbox-icon"
-                            />
+                              onClick={() => handleApprove(home.uuid)}
+                            /> */}
                             <img
                               src={iconcross}
                               className="dashboard-optionbox-icon"
+                              onClick={() => handleNotApprove(home.uuid, user.uuid)}
                             />
                           </div>
                         </td>
