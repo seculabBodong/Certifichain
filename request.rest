@@ -10,7 +10,8 @@ Content-Type: application/json
     "role": "client",
     "status": "not_approved",
     "image": "defaultPP.png",
-    "url": "http://localhost:5000/images/defaultPP.png"
+    "url": "http://localhost:5000/images/defaultPP.png",
+    "urlDoc": "http://localhost:5000/images/Sertifikat.pdf"
 }
 
 ###
@@ -26,7 +27,8 @@ Content-Type: application/json
     "role": "admin",
     "status": "approved",
     "image": "defaultPP.png",
-    "url": "http://localhost:5000/images/defaultPP.png"
+    "url": "http://localhost:5000/images/defaultPP.png",
+    "urlDoc": "http://localhost:5000/images/Sertifikat.pdf"
 }
 
 ###
@@ -113,3 +115,12 @@ Content-Type: application/json
 ###
 // hapus produk
 DELETE http://localhost:5000/products/7416ea8c-9121-4d10-8cf0-91243db66f5b
+
+###
+// POST data upload
+POST http://localhost:5000/proof
+Content-Type: multipart/form-data
+
+{
+    "data": "10000",
+}

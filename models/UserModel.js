@@ -65,6 +65,13 @@ const Users = db.define(
         notEmpty: true,
       },
     },
+    urlDoc: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
   },
   {
     freezeTableName: true,

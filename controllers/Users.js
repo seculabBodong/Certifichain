@@ -5,7 +5,7 @@ import path from "path";
 export const getUsers = async (req, res) => {
   try {
     const response = await Users.findAll({
-      attributes: ["uuid", "name", "email", "role", "status", "image", "url"],
+      attributes: ["uuid", "name", "email", "role", "status", "image", "url", "urlDoc"],
     });
     res.status(200).json(response);
   } catch (error) {
@@ -16,7 +16,7 @@ export const getUsers = async (req, res) => {
 export const getUserById = async (req, res) => {
   try {
     const response = await Users.findOne({
-      attributes: ["uuid", "name", "email", "role", "status", "image", "url"],
+      attributes: ["uuid", "name", "email", "role", "status", "image", "url", "urlDoc"],
       where: {
         uuid: req.params.id,
       },
@@ -34,6 +34,25 @@ export const createUser = async (req, res) => {
       msg: "Password dan confirm password tidak cocok",
     });
   const hashPassword = await argon2.hash(password);
+
+  if (req.files === null)
+  return res.status(400).json({ msg: "No File Uploaded" });
+  const file = req.files.file;
+  const fileSize = file.data.length;
+  const ext = path.extname(file.name);
+  const fileName = file.md5 + ext;
+  const urlDoc = `${req.protocol}://${req.get("host")}/proof/${fileName}`;
+  const allowedType = [".pdf", ".doc", ".docx"];
+
+  if (!allowedType.includes(ext.toLowerCase()))
+    return res.status(422).json({ msg: "Invalid document" });
+  if (fileSize > 5000000)
+    return res.status(422).json({ msg: "Document must be less than 5 MB" });
+
+  file.mv(`./public/proof/${fileName}`, async (err) => {
+    if (err) return res.status(500).json({ msg: err.message });
+  });
+
   try {
     await Users.create({
       name: name,
@@ -43,6 +62,7 @@ export const createUser = async (req, res) => {
       status: "not_approved",
       image: "defaultPP.png",
       url: "http://localhost:5000/images/defaultPP.png",
+      urlDoc: urlDoc
     });
     res.status(201).json({ msg: "Register Berhasil" });
   } catch (error) {
@@ -158,3 +178,32 @@ export const saveProfilePicture = (req, res) => {
     }
   });
 };
+
+export const saveProof = (req, res) => {
+  if (req.files === null)
+    return res.status(400).json({ msg: "No File Uploaded" });
+  const name = req.body.title;
+  const file = req.files.file;
+  const fileSize = file.data.length;
+  const ext = path.extname(file.name);
+  const fileName = file.md5 + ext;
+  const url = `${req.protocol}://${req.get("host")}/proof/${fileName}`;
+  const allowedType = [".pdf", ".doc", ".docx"];
+
+  if (!allowedType.includes(ext.toLowerCase()))
+    return res.status(422).json({ msg: "Invalid document" });
+  if (fileSize > 5000000)
+    return res.status(422).json({ msg: "Document must be less than 5 MB" });
+
+  file.mv(`./public/proof/${fileName}`, async (err) => {
+    if (err) return res.status(500).json({ msg: err.message });
+    try {
+      // await Product.create({ name: name, image: fileName, url: url });
+      await Proof.create({name: name, image: fileName, url: url, userId: "1"})
+      res.status(201).json({ msg: "Document Created Successfuly" });
+    } catch (error) {
+      console.log(error.message);
+    }
+  });
+};
+
