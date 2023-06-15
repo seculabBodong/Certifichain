@@ -37,6 +37,40 @@ export function Home() {
   const { user } = useSelector((state) => state.auth);
   const { blockchainUser } = useSelector((state) => state.auth);
   const currentState = store.getState();
+  const [infoText, setInfoText] = useState("");
+  const [result, setResult] = useState("");
+  const [fileUrl, setFileUrl] = useState("");
+  const [isActive, setIsActive] = useState(false);
+
+  const fetchRequest = (file, formData) => {
+    fetch("http://api.qrserver.com/v1/read-qr-code/", {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        result = result[0].symbol[0].data;
+        setInfoText(result ? "success" : "Couldn't scan QR Code");
+        if (!result) return;
+        setResult(result);
+        setFileUrl(URL.createObjectURL(file));
+        setIsActive(true);
+      })
+      .catch(() => {
+        setInfoText("Couldn't scan QR Code");
+      });
+  };
+
+  const handleFileChange = async (e) => {
+    let file = e.target.files[0];
+    if (!file) return;
+    let formData = new FormData();
+    formData.append("file", file);
+    fetchRequest(file, formData);
+  };
+
+
+  const fileInpRef = React.useRef(null);
 
   useEffect(() => {
     dispatch(getMe());
@@ -133,7 +167,9 @@ export function Home() {
                 <text>atau</text>
                 <div className="pilih-file-home">
                   <label for="upload-file">Pilih File</label>
-                  <input type="file" name="photo" id="upload-file" />
+                  <input type="file" name="photo" id="upload-file" onChange={handleFileChange} />
+                  <p>{infoText}</p>
+                  {console.log(result)}
                 </div>
               </div>
             </div>
