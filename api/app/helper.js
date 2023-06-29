@@ -67,19 +67,21 @@ var getRegisteredUser = async function (username, userOrg, isJson) {
 			logger.info('User %s was not enrolled, so we will need an admin user object to register', username);
 			var admins = hfc.getConfigSetting('admins');
 			let adminUserObj = await client.setUserContext({ username: admins[0].username, password: admins[0].secret });
-			let caClient = client.getCertificateAuthority();
+			var caClient = client.getCertificateAuthority();
 			// let secret = await caClient.register({
-			// 	enrollmentID: username,
-			// 	affiliation: userOrg.toLowerCase() + '.department1',
-			// 	attrs: [{ name: 'role', value: 'approver', ecert: true }]
-			// }, adminUserObj);
+				// 	enrollmentID: username,
+				// 	affiliation: userOrg.toLowerCase() + '.department1',
+				// 	attrs: [{ name: 'role', value: 'approver', ecert: true }]
+				// }, adminUserObj);
 			let secret = await caClient.register({
 				enrollmentID: username,
 				affiliation: userOrg.toLowerCase() + '.department1'
 			}, adminUserObj);
+			
 			logger.debug('Successfully got the secret for user %s', username);
 			// user = await client.setUserContext({ username: username, password: secret, attr_reqs: [{ name: 'role', optional: false }] });
 			user = await client.setUserContext({ username: username, password: secret });
+			// return secret;
 			logger.debug('Successfully enrolled username %s  and setUserContext on the client object', username);
 		}
 		if (user && user.isEnrolled) {

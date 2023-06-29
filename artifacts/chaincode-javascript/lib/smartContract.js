@@ -14,33 +14,22 @@ const { Contract } = require("fabric-contract-api");
 // const { all } = require("../../../api/app");
 
 class AssetTransfer extends Contract {
-  // // Generate random ID
-  async _generateRandomID(ctx) {
-    let prefix = "";
-    let length = 10;
-    // Generate a New ID
-    let ID = prefix + Math.random().toString(36).substring(2, length);
-
-    // Check if the ID already exist on the ledger
-    let assetExists = await ctx.stub.getState(ID);
-    if (assetExists && assetExists > 0) {
-      ID = await _generateRandomID(ctx);
-    }
-
-    return ID.toString();
-  }
-
   async InitLedger(ctx) {
     // let idCert = await this._generateRandomID(ctx);
     const assets = [
       {
         ID: "random123",
+        Logo: "uyhasj9== (base 64)",
         Acara: "ACARA 1",
         Organisasi: "Organisasi_Keamanan",
         Nama: "Test 1",
         Perihal: "Workshop",
         Deskripsi: "asdnqwienzliqlksdlamcpawenqlwe (contoh)",
+        Author1: "Fauzan Ansori",
+        Jabatan1: "Koor Assistent",
         TTD1: "eqwkvspdad== (base64)",
+        Author2: "Hamzah Fatihulhaq",
+        Jabatan2: "Ketua Pelaksana",
         TTD2: "qsdaserzxc== (base64)",
         Certificate: "asdqwvjaskaa== (base64)",
       },
@@ -50,12 +39,17 @@ class AssetTransfer extends Contract {
       await this.CreateAsset(
         ctx,
         asset.ID,
+        asset.Logo,
         asset.Acara,
         asset.Organisasi,
         asset.Nama,
         asset.Perihal,
         asset.Deskripsi,
+        asset.Author1,
+        asset.Jabatan1,
         asset.TTD1,
+        asset.Author2,
+        asset.Jabatan2,
         asset.TTD2,
         asset.Certificate
       );
@@ -66,26 +60,21 @@ class AssetTransfer extends Contract {
   async CreateAsset(
     ctx,
     idCert,
+    logo,
     acara,
     oraganisasi,
     nama,
     perihal,
     deskripsi,
+    author1,
+    jabatan1,
     ttd1,
+    author2,
+    jabatan2,
     ttd2,
     certificate
   ) {
     if (idCert == "" && idCert != "random123") {
-      // // idCert = await this._generateRandomID(ctx);
-      // let prefix = "";
-      // let length = 10;
-      // // Generate a New ID
-      // idCert = prefix + Math.random().toString(36).substring(2, length);
-      // idCert = encode(index + prefix + "12")
-      // idCert = angkaPil + decode(encode(idCert)) + angkaPil2
-      // throw new Error(`idCert = ${idCert}`);
-      // idCert = "random111";
-      // Check if the ID already exist on the ledger
       const exists = await this.AssetExists(ctx, idCert);
       if (exists) {
         throw new Error(`The asset ${idCert} already exists`);
@@ -100,12 +89,17 @@ class AssetTransfer extends Contract {
     const asset = {
       docType: "certificate",
       ID: id,
-      Acara: acara,
+      Logo: logo,
+      Acara: acara, 
       Organisasi: oraganisasi,
       Nama: nama,
       Perihal: perihal,
       Deskripsi: deskripsi,
+      Author1: author1,
+      Jabatan1: jabatan1,
       TTD1: ttd1,
+      Author2: author2,
+      Jabatan2: jabatan2,
       TTD2: ttd2,
       Certificate: certificate,
     };
@@ -152,24 +146,15 @@ class AssetTransfer extends Contract {
     }
     const asset = JSON.parse(assetJSON.toString());
 
-    // const timestamp = ctx.stub.getTxTimestamp();
     const history = await ctx.stub.getHistoryForKey(idCert);
+    
     let hist = await this._HistoryTime(history, true);
-    asset.time = hist;
+    asset.time = {
+      "createDate": hist.createDate,
+      "lastModified": hist.lastModified
+    };
 
-    // let hist = await history.next();
-   
-    // asset.createDate = new Date(
-    //   hist[0].value.timestamp.seconds * 1000
-    // ).toISOString();
-
-    // asset.lastModified = new Date(
-    //   hist.value.timestamp.seconds * 1000
-    // ).toISOString();
-
-    // asset.timestamp = timestamp;
-
-    // asset.TxId = hist.value.txId;
+    asset.txId = hist.TxId;
 
     return JSON.stringify(asset);
   }
@@ -184,12 +169,17 @@ class AssetTransfer extends Contract {
   async UpdateAsset(
     ctx,
     idCert,
+    logo,
     acara,
     oraganisasi,
     nama,
     perihal,
     deskripsi,
+    author1,
+    jabatan1,
     ttd1,
+    author2,
+    jabatan2,
     ttd2,
     certificate
   ) {
@@ -213,12 +203,17 @@ class AssetTransfer extends Contract {
     const updatedAsset = {
       docType: "certificate",
       ID: idCert,
+      Logo: logo,
       Acara: acara,
       Organisasi: oraganisasi,
       Nama: nama,
       Perihal: perihal,
       Deskripsi: deskripsi,
+      Author1: author1,
+      Jabatan1: jabatan1,
       TTD1: ttd1,
+      Author2: author2,
+      Jabatan2: jabatan2,
       TTD2: ttd2,
       Certificate: certificate,
     };
@@ -395,7 +390,15 @@ class AssetTransfer extends Contract {
         console.log(err);
         record = strValue;
       }
-      record.time = hist;
+      // record.time = hist;
+      
+      record.time = {
+        "createDate": hist.createDate,
+        "lastModified": hist.lastModified
+      };
+  
+      record.txId = hist.TxId;
+
       allResults.push(record);
       responseRange = await organisasiAssetResultsIterator.next();
     }
@@ -439,7 +442,15 @@ class AssetTransfer extends Contract {
         console.log(err);
         record = strValue;
       }
-      record.time = hist;
+      // record.time = hist;
+
+      record.time = {
+        "createDate": hist.createDate,
+        "lastModified": hist.lastModified
+      };
+  
+      record.txId = hist.TxId;
+
       allResults.push(record);
       responseRange = await acaraAssetResultsIterator.next();
     }
@@ -483,7 +494,15 @@ class AssetTransfer extends Contract {
         console.log(err);
         record = strValue;
       }
-      record.time = hist;
+      // record.time = hist;
+
+      record.time = {
+        "createDate": hist.createDate,
+        "lastModified": hist.lastModified
+      };
+  
+      record.txId = hist.TxId;
+      
       allResults.push(record);
       responseRange = await namaAssetResultsIterator.next();
     }
@@ -492,6 +511,7 @@ class AssetTransfer extends Contract {
   
   async _HistoryTime(iterator, isHistory){
     let time = [];
+    let TxIds = [];
     let res = await iterator.next();
     let jsonRes = {};
     while (!res.done) {
@@ -499,6 +519,10 @@ class AssetTransfer extends Contract {
         console.log(res.value.value.toString("utf8"));
         if (isHistory && isHistory === true) {
           // jsonRes.Timestamp = res.value.timestamp;
+          // let TxId = res.value.txId;
+          TxIds.push(
+            res.value.txId
+          );
           let dateTime = new Date(res.value.timestamp.seconds * 1000).toISOString();
           
           let options = {
@@ -517,8 +541,8 @@ class AssetTransfer extends Contract {
           dateTime = new Date(dateTime).toLocaleString('id-ID', options);
           time.push(
             dateTime
-          );
-          
+            );
+         
         } else {
           jsonRes.Key = res.value.key;
           try {
@@ -531,6 +555,8 @@ class AssetTransfer extends Contract {
       }
       res = await iterator.next();
     }
+    
+    jsonRes.TxId = TxIds[0];
 
     let lastIndex = time.length -1;
     if (lastIndex > 0){
@@ -555,9 +581,27 @@ class AssetTransfer extends Contract {
         if (isHistory && isHistory === true) {
           jsonRes.TxId = res.value.txId;
           // jsonRes.Timestamp = res.value.timestamp;
-          jsonRes.Timestamp = new Date(
-            res.value.timestamp.seconds * 1000
-          ).toISOString();
+          // jsonRes.Timestamp = new Date(
+          //   res.value.timestamp.seconds * 1000
+          // ).toISOString();
+
+          let dateTime = new Date(res.value.timestamp.seconds * 1000).toISOString();
+
+          let options = {
+            timeZone: 'Asia/Jakarta',
+            timeZoneName: 'short',
+            hour12: false,
+            weekday: 'short',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric'
+          };
+
+          jsonRes.Timestamp = new Date(dateTime).toLocaleString('id-ID', options);
+
           try {
             jsonRes.Value = JSON.parse(res.value.value.toString("utf8"));
           } catch (err) {

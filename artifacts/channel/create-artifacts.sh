@@ -4,7 +4,7 @@ sudo rm -rf ./crypto-config
 sudo rm genesis.block mychannel.tx
 sudo rm -rf ../../channel-artifacts/*
 
-export FABRIC_CFG_PATH = ${PWD}/configtx.yaml
+export FABRIC_CFG_PATH=${PWD}/configtx.yaml
 
 #Generate Crypto artifactes for organizations
 cryptogen generate --config=./crypto-config.yaml --output=./crypto-config/

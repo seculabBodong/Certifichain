@@ -134,7 +134,7 @@ var readChaicode = async function (
       args: args,
     };
     let response_payloads = await channel.queryByChaincode(request);
-
+    
     if (response_payloads[0].status == 500) {
       return {
         status: 500,
@@ -142,18 +142,22 @@ var readChaicode = async function (
         successs: false,
       };
     }
-
+    
     console.log(response_payloads[0].toString("utf8"));
-
+    
     if (response_payloads != "") {
       for (let i = 0; i < response_payloads.length; i++) {
         logger.info(
           "Batch",
           args[0] + "=" + response_payloads[i].toString("utf8")
-        );
-      }
-      // return a JSON Object as response
-      return JSON.parse(response_payloads.toString("utf8"));
+          );
+        }
+        // return a JSON Object as response
+        let responses = JSON.parse(response_payloads.toString("utf8"));
+        responses.successs = true;
+        responses = JSON.stringify(responses)
+        // console.log("ehe : ",responses);
+      return JSON.parse(responses);
     } else {
       logger.error("response_payloads is null");
       throw new Error("response_payload is null");

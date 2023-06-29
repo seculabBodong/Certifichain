@@ -121,19 +121,15 @@ chaincodeInvoke() {
 }
 chaincodeQuery(){
     setGlobalsForPeer0Org1
-    # peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function":"GetAllAssets","Args":["Riset Grup 2023"]}' >&output.json
-    # peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function":"ReadAsset","Args":["021bdf2"]}'
-    # peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"Args":["GetAllAssets"]}'>&output.json
+    
     peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function":"ReadAsset","Args":["random123"]}'>&output.json
-    # peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function":"AssetByColor","Args":["black"]}' >&output.json
+    
     cat output.json
 }
 # just testing
-chaincodeRandomid() {
+chaincodeTest() {
     setGlobalsForPeer0Org1
     
-    # peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function":"ReadAsset","Args":["random111"]}'
-
     ## asset teesting
     peer chaincode invoke -o localhost:8050 \
         --ordererTLSHostnameOverride orderer2.example.com \
@@ -142,7 +138,22 @@ chaincodeRandomid() {
         -C $CHANNEL_NAME -n ${CC_NAME} \
         --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_ORG1_CA \
         --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_ORG2_CA \
-        -c '{"function":"CreateAsset","Args":["fdsf224", "ACARA 2", "Organisasi_Keamanan", "Test 2", "Workshop", "lorem ipsum asdeghtujryewe(contoh)", "eqwkvspdad== (base64)", "qsdaserzxc== (base64)", "qqwgkksddfas== (base64)"]}'
+        -c '{"function":"CreateAsset","Args":[
+            "quwejasjdk", 
+            "vvdfgdfbgdfb",
+            "ACARA 2", 
+            "Organisasi_Keamanan", 
+            "Test 2", 
+            "workshop", 
+            "lorem ipsum asdeghtujryewe(contoh)", 
+            "Fauzan Ansori",
+            "Koordinator Assistant",
+            "eqwkvspdad== (base64)", 
+            "Hamzah Fatihulhaq",
+            "Ketua Acara",
+            "qsdaserzxc== (base64)", 
+            "sdfsdfxcvxdfsvxcv====== "
+            ]}'
 }
 
 packageChaincode
@@ -166,4 +177,4 @@ chaincodeQuery
 # peer chaincode list --installed
 # peer chaincode list --instantiated -C mychannel
 
-# chaincodeRandomid
+# chaincodeTest

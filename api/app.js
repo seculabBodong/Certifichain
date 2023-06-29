@@ -33,12 +33,15 @@ var port = process.env.PORT || hfc.getConfigSetting("port");
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", "http://localhost:5000"], //pake araay [] bila domain kita banyak
+    origin: ["http://localhost:3000", "http://localhost:5000", "http://172.16.10.53:5000", "http://172.16.10.53:3000", "http://certifichain.seculab.space"], //pake araay [] bila domain kita banyak
   })
 );
 
 //support parsing of application/json type post data
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '10mb'}));
+app.use(bodyParser.urlencoded({limit: '10mb', extended: true}));
+
 //support parsing of application/x-www-form-urlencoded post data
 app.use(
   bodyParser.urlencoded({
@@ -52,7 +55,7 @@ app.use(
     secret: "thisismysecret",
     algorithms: ["HS256"],
   }).unless({
-    path: ["/users", "/register", "/login", "/home"],
+    path: ["/users", "/register", "/login", "/home", "/history"],
   })
 );
 app.use(bearerToken());
@@ -65,6 +68,7 @@ app.use(function (req, res, next) {
     req.originalUrl.indexOf("/users") >= 0 ||
     req.originalUrl.indexOf("/login") >= 0 ||
     req.originalUrl.indexOf("/register") >= 0 ||
+    req.originalUrl.indexOf("/history") >= 0 ||
     req.originalUrl.indexOf("/home") >= 0
   ) {
     return next();
@@ -267,7 +271,7 @@ app.post(
       var fcn = req.body.fcn;
       var args = req.body.args;
       // Generate a New ID
-      args[0] = await _generateRandomID();
+      // args[0] = await _generateRandomID();
 
       logger.debug("channelName  : " + channelName);
       logger.debug("chaincodeName : " + chaincodeName);
@@ -459,8 +463,8 @@ app.get("/home", async function (req, res) {
   var channelName = "mychannel";
   var chaincodeName = "basic";
   let args = req.query.args;
-  let fcn = req.query.fcn;
-  let peer = req.query.peer;
+  let fcn = "ReadAsset";
+  let peer = "peer0.org1.example.com";
 
   logger.debug("channelName : " + channelName);
   logger.debug("chaincodeName : " + chaincodeName);
@@ -485,7 +489,51 @@ app.get("/home", async function (req, res) {
   }
   args = args.replace(/'/g, '"');
   args = JSON.parse(args);
-  logger.debug(args);
+  logger.debug("args : " + args);
+
+  let message = await query.readChaicode(
+    peer,
+    channelName,
+    chaincodeName,
+    args,
+    fcn
+  );
+  res.send(message);
+});
+
+// History for user
+app.get("/history", async function (req, res) {
+  logger.debug("==================== QUERY BY CHAINCODE ==================");
+  var channelName = "mychannel";
+  var chaincodeName = "basic";
+  let args = req.query.args;
+  let fcn = "GetAssetHistory";
+  let peer = "peer0.org1.example.com";
+
+  logger.debug("channelName : " + channelName);
+  logger.debug("chaincodeName : " + chaincodeName);
+  logger.debug("fcn : " + fcn);
+  logger.debug("args : " + args);
+
+  if (!chaincodeName) {
+    res.json(getErrorMessage("'chaincodeName'"));
+    return;
+  }
+  if (!channelName) {
+    res.json(getErrorMessage("'channelName'"));
+    return;
+  }
+  if (!fcn) {
+    res.json(getErrorMessage("'fcn'"));
+    return;
+  }
+  if (!args) {
+    res.json(getErrorMessage("'args'"));
+    return;
+  }
+  args = args.replace(/'/g, '"');
+  args = JSON.parse(args);
+  logger.debug("args : " + args);
 
   let message = await query.readChaicode(
     peer,
