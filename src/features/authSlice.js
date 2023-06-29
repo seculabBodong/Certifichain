@@ -14,7 +14,7 @@ export const LoginUser = createAsyncThunk(
   "user/loginUser",
   async (user, thunkAPI) => {
     try {
-      const response = await axios.post("http://localhost:5000/login", {
+      const response = await axios.post("http://172.16.10.53:5000/login", {
         email: user.email,
         password: user.password,
       });
@@ -33,7 +33,7 @@ export const LoginBlockchain = createAsyncThunk(
   "user/loginBlockchain",
   async (user, thunkAPI) => {
     try {
-      const response = await axios.post("http://localhost:4000/login", {
+      const response = await axios.post("http://172.16.10.53:4000/login", {
         username: user.email,
         orgName: user.orgname,
       });
@@ -50,7 +50,7 @@ export const LoginBlockchain = createAsyncThunk(
 
 export const getMe = createAsyncThunk("user/getMe", async (_, thunkAPI) => {
   try {
-    const response = await axios.get("http://localhost:5000/me");
+    const response = await axios.get("http://172.16.10.53:5000/me");
     return response.data;
   } catch (error) {
     if (error.response) {
@@ -61,7 +61,7 @@ export const getMe = createAsyncThunk("user/getMe", async (_, thunkAPI) => {
 });
 
 export const LogOut = createAsyncThunk("user/LogOut", async () => {
-  await axios.delete("http://localhost:5000/logout");
+  await axios.delete("http://172.16.10.53:5000/logout");
 });
 
 export const authSlice = createSlice({

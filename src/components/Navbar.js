@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "./Button";
+import Button from '@mui/material/Button';
 import logoIcon from "../assets/logoIcon2.png";
 import ProfileIcon from "../assets/defaultPP.png"
 import "./Navbar.css";
 import { useDispatch, useSelector } from "react-redux";
 import { LogOut, reset } from "../../src/features/authSlice";
+import styled from "@emotion/styled";
 
 function Navbar() {
   const dispatch = useDispatch();
@@ -35,6 +36,14 @@ function Navbar() {
     navigate("/profile");
   }
 
+  const goLogin = () => {
+    navigate("/login");
+  }
+
+  const goSignup = () => {
+    navigate("/signup");
+  }
+
   window.addEventListener("resize", showButton);
 
   return (
@@ -57,22 +66,22 @@ function Navbar() {
           </ul>
           <div className="vertical"></div>
           {!user && (
-            <Button buttonStyle="btn--outline">
+            <Button onClick={() => goLogin} variant="outlined" style={{marginRight: 30, borderColor: "white"}}>
               <Link to="/login" style={{ textDecoration: 'none',color: "white"}}>Sign In</Link>
             </Button>
           )}
           {!user && (
-            <Button buttonStyle="btn--outline">
+            <Button variant="outlined" style={{marginRight: 30, borderColor: "white"}}>
               <Link to="/signup" style={{ textDecoration: 'none',color: "white"}}>Sign Up</Link>
             </Button>
           )}
           {user && (
-            <Button buttonStyle="btn--outline">
+            <Button variant="outlined" style={{marginRight: 30, borderColor: "white"}}>
               <Link to="/input" style={{ textDecoration: 'none',color: "white"}}>Input</Link>
             </Button>
           )}
           {user && (
-            <Button buttonStyle="btn--outline" onClick={logout}>
+            <Button variant="outlined" onClick={logout} style={{marginRight: 30, borderColor: "white"}}>
               <Link to="/login" style={{ textDecoration: 'none',color: "white"}}>Logout</Link>
             </Button>
           )}

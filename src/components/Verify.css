@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 ol, ul {
     list-style: none;
@@ -13,7 +14,7 @@ ol, ul {
 .left-container {
     display: flex;
     flex-direction: column;
-    background-color: #E5E5CB;
+    background-color: #EEEEEE;
     width: 30%;
     height: 100vh;
     padding-top: 5%;
@@ -43,14 +44,14 @@ ol, ul {
 
 .left-options {
     font-family: 'Old Standard TT', serif;
-    font-size: 1.2vw;
+    font-size: 1.0vw;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
 }
 
 .left-description {
-    font-family: 'Old Standard TT', serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 1.1vw;
     background-color: white;
     display: flex;
@@ -58,7 +59,13 @@ ol, ul {
     margin: 5% 10% 10% 10%;
     text-align: justify;
     border-radius: 10px;
-    width: fit-content;
+    width: 80%;
+    word-wrap: break-word;
+    white-space: pre-line;
+}
+
+.left-width{
+    width: 100%;
 }
 
 .horizontal-div {
@@ -102,4 +109,9 @@ ol, ul {
     border-radius: 10px;
     margin-top: 2%;
     margin-left: 740px;
+}
+
+.text{
+    word-wrap: break-word;
+    white-space: pre-line;
 }

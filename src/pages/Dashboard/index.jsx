@@ -21,7 +21,7 @@ export function Dashboard(){
     const getAsset = async () => {
         console.log("ALHAMDULILAH");
         try {
-            const response = await axios.get('http://localhost:4000/home?args=[]&peer=peer0.org1.example.com&fcn=GetAllAssets', {withCredentials: false, headers: { 
+            const response = await axios.get('http://172.16.10.53:4000/home?args=[]&peer=peer0.org1.example.com&fcn=GetAllAssets', {withCredentials: false, headers: { 
                 Authorization : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODM4MzU4MjksInVzZXJuYW1lIjoidGVzdF91c2VyMSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNjgzNzk5ODI5fQ.cGtfrvfGft3ezKn43wJQVUxBDIOSRbN1cD3OVjHY_0s'
               }});
             // console.log(response.data);

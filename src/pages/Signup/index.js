@@ -14,22 +14,23 @@ export function Signup() {
   const [msg, setMsg] = useState("");
   const [imageFile, setImageFile] = useState("");
   const [url, setUrl] = useState("");
+  const [docFile, setDocFile] = useState();
   const navigate = useNavigate();
+
+  const fileSelect = (event) => {
+    setDocFile(event.target.files[0]);
+    console.log(docFile);
+  }
 
   const saveUserBlockchain = async (e) => {
     e.preventDefault();
     try {
       await axios.post(
-        "http://localhost:4000/register",
+        "http://172.16.10.53:4000/register",
         {
           username: email,
-          orgName: "Org2",
+          orgName: "Org2"
         }
-        // , {
-        //   headers: {
-        //     "Content-Type": "multipart/form-data",
-        //   },
-        // }
       );
     } catch (error) {
       if (error.response) {
@@ -39,35 +40,29 @@ export function Signup() {
   };
 
   const saveUser = async (e) => {
+    const formDaftar = new FormData();
+    formDaftar.append("name", name);
+    formDaftar.append("email", email);
+    formDaftar.append("password", password);
+    formDaftar.append("confPassword", confPassword);
+    formDaftar.append("role", "client");
+    formDaftar.append("file", docFile);
     e.preventDefault();
     try {
       await axios.post(
-        "http://localhost:5000/users",
-        {
-          name: name,
-          email: email,
-          password: password,
-          confPassword: confPassword,
-          role: "client",
-          // imageFile: defaultProfile,
-        }
-        // , {
-        //   headers: {
-        //     "Content-Type": "multipart/form-data",
-        //   },
-        // }
-      );
-      await axios.post(
-        "http://localhost:4000/register",
+        "http://172.16.10.53:4000/register",
         {
           username: email,
-          orgName: "Org2",
+          orgName: "Org2"
         }
-        // , {
-        //   headers: {
-        //     "Content-Type": "multipart/form-data",
-        //   },
-        // }
+      );
+      await axios.post(
+        "http://172.16.10.53:5000/users", formDaftar,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
       navigate("/login");
     } catch (error) {
@@ -80,8 +75,8 @@ export function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await saveUserBlockchain();
-      await saveUser();
+      // await saveUserBlockchain();
+      // await saveUser();
       console.log("berhasil upload");
     } catch (error) {
       if (error.response) {
@@ -90,6 +85,39 @@ export function Signup() {
       }
     }
   };
+
+  const uploadPdf = async (e) => {
+    const formData = new FormData();
+    formData.append("selectedFile", docFile);
+    e.preventDefault();
+    try {
+      await axios.post(
+        "http://172.16.10.53:5000/", formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+    } catch (error) {
+      if (error.response) {
+        setMsg(error.response.data.msg);
+      }
+    }
+  };
+
+  const checkForm = () => {
+    const formDaftar = new FormData();
+    formDaftar.append("name", name);
+    formDaftar.append("email", email);
+    formDaftar.append("password", password);
+    formDaftar.append("confPassword", confPassword);
+    formDaftar.append("role", "client");
+    formDaftar.append("file", docFile);
+    for (const value of formDaftar.values()) {
+      console.log(value);
+    }
+  }
 
   return (
     <div className="App">
@@ -174,15 +202,16 @@ export function Signup() {
               />
             </div>
 
-            {/* <div className="formField">
-              <label className="formFieldLabel" htmlFor="password">
-                Supporting File
+            <div className="input-logo-container">
+                {/* <label for="upload-logo">Pilih File</label> */}
+                <label className="formFieldLabel" htmlFor="password">
+                Input Bukti
               </label>
-              <div className="input-logo-container">
-                <label for="upload-logo">Pilih File</label>
-                <input type="file" name="photo" id="upload-logo" />
-              </div>
-            </div> */}
+                <input type="file" name="photo" id="upload-logo" className="input-bukti" onChange={fileSelect}/>
+                {/* <div className="formFieldButton" onClick={checkForm}>
+                  Submit File
+                </div> */}
+            </div>
 
             <div className="formFieldButtoms">
               <button type="submit" className="formFieldButton">

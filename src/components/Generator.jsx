@@ -18,6 +18,7 @@ import domtoimage from 'dom-to-image';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMe } from '../features/authSlice';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const value="this is placeeeeholder";
 
@@ -39,28 +40,29 @@ export class ComponentToPrint extends React.PureComponent {
                         </div>
                         <div className="Nama_psrt" style={{ position: 'absolute', top: '35%',left:'10%',  width: '80%',textAlign:'center' }}>
                             <h1  style={{ fontSize: '3rem', color: '#33d5ac' }}>{this.props.name === '' ? 'Name' : this.props.name}</h1>
-                            <p className='info' style={{ fontSize: '15px', fontWeight: '600', color: '#ff9800' }}>{this.props.desc === '' ? 'for the active participation in the event and for giving efforts,ideas and Knowledge.' : this.props.desc}</p>
+                            <p className='info' style={{ fontSize: '15px', fontWeight: '600', color: 'black' }}>{this.props.desc === '' ? 'for the active participation in the event and for giving efforts,ideas and Knowledge.' : this.props.desc}</p>
                         </div>
                         <div style={{left:'90%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                         <div className="author" style={{ position: 'absolute', top: '59%', left: '10%', width: '20%', textAlign: 'center' }}>
-                            <h2 style={{ fontSize: '12px', color: '#0e4573', textDecoration: 'underline', textTransform: 'uppercase' }}>{this.props.author_a=== '' ? 'Course Director':this.props.author_a}</h2>
+                            <h2 style={{ fontSize: '12px', color: 'black', textDecoration: 'underline', textTransform: 'uppercase' }}>{this.props.author_a=== '' ? 'Course Director':this.props.author_a}</h2>
                         </div>
                         <div className="author1" style={{ position: 'absolute', top: '65%', left: '5%', width: '30%', textAlign: 'center' }}>
-                            <h1 style={{ fontSize: '15px', color: '#ff9800', textTransform: 'uppercase' }}>{this.props.author1 === '' ? 'Author Name' : this.props.author1}</h1>
+                            <h1 style={{ fontSize: '15px', color: 'black', textTransform: 'uppercase' }}>{this.props.author1 === '' ? 'Author Name' : this.props.author1}</h1>
                             {this.props.ttd1 === '' ? "" : <img src={this.props.ttd1} style={{ position: 'absolute', width: '5rem', borderRadius: '0%', top: '200%', left: '30%' }} alt="ttd1" />}
                         </div>
                         </div>
                         <div style={{left: '90%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>                            
                         <div className="author" style={{ position: 'absolute', top: '59%', left: '70%', width: '20%', textAlign: 'center' }}>
-                            <h2 style={{ fontSize: '12px', color: '#0e4573', textDecoration: 'underline', textTransform: 'uppercase' }}>{this.props.author_b=== '' ? 'Course Director':this.props.author_b}</h2>
+                            <h2 style={{ fontSize: '12px', color: 'black', textDecoration: 'underline', textTransform: 'uppercase' }}>{this.props.author_b=== '' ? 'Course Director':this.props.author_b}</h2>
                         </div>
                         <div className="author2" style={{ position: 'absolute', top: '65%', left: '65%',  width: '30%', textAlign: 'center' }}>
-                            <h1 style={{ fontSize: '15px', color: '#ff9800', textTransform: 'uppercase' }}>{this.props.author2 === '' ? 'Author2 Name' : this.props.author2}</h1>
+                            <h1 style={{ fontSize: '15px', color: 'black', textTransform: 'uppercase' }}>{this.props.author2 === '' ? 'Author2 Name' : this.props.author2}</h1>
                             {this.props.ttd2 === '' ? "" : <img src={this.props.ttd2} style={{ position: 'absolute', width: '5rem', borderRadius: '0%', top: '200%', right: '30%' }} alt="ttd2" />}
                         </div>
                         </div>
                         {this.props.logo === '' ? "" : <img src={this.props.logo} style={{ position: 'absolute', width: '4rem', borderRadius: '0%', top: '5%', right: '5%' }} alt="logo" />}
-                        <QRCodeCanvas className='QR' style={{ position: 'absolute', borderRadius: '0%', top: '70%', left: '42.5%' }} value={`http://localhost:4000/home?args=["${this.props.certID}"]`}/>
+                        <QRCodeCanvas className='QR' style={{ position: 'absolute', borderRadius: '0%', top: '70%', left: '42.5%' }} value={`http://172.16.10.53:3000/verify?id=["${this.props.certID}"]`}/>
+                        {/* <p style={{ position: 'absolute', borderRadius: '0%', top: '95%', left: '50%', fontSize: '15px', color: 'black' }}>ID={this.props.certID === '' ? '' : this.props.certID}</p> */}
                     </div>
                 );
             }
@@ -68,8 +70,6 @@ export class ComponentToPrint extends React.PureComponent {
                 return (
                     <div style={{ position: 'relative'}} id="template2">
                         <img src={template2} style={{ width: '45rem' }}></img>
-        
-                        
                         <div className="info" style={{ position: 'absolute', top: '20%', width: '100%',textAlign:'center' }}>
                             <h2 style={{ textTransform: 'uppercase', color: '#0e4573', textDecoration: 'underline', marginBottom: '1rem', textOverflow:'clip' }}>{this.props.heading === '' ? 'Certificate of Achievement' : this.props.heading}</h2>
                         </div>
@@ -78,28 +78,29 @@ export class ComponentToPrint extends React.PureComponent {
                         </div>
                         <div className="Nama_psrt" style={{ position: 'absolute', top: '35%',left:'10%',  width: '80%',textAlign:'center' }}>
                             <h1  style={{ fontSize: '3rem', color: '#33d5ac' }}>{this.props.name === '' ? 'Name' : this.props.name}</h1>
-                            <p className='info' style={{ fontSize: '15px', fontWeight: '600', color: '#ff9800' }}>{this.props.desc === '' ? 'for the active participation in the event and for giving efforts,ideas and Knowledge.' : this.props.desc}</p>
+                            <p className='info' style={{ fontSize: '15px', fontWeight: '600', color: 'black' }}>{this.props.desc === '' ? 'for the active participation in the event and for giving efforts,ideas and Knowledge.' : this.props.desc}</p>
                         </div>
                         <div style={{left:'90%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                         <div className="author" style={{ position: 'absolute', top: '59%', left: '10%', width: '20%', textAlign: 'center' }}>
-                            <h2 style={{ fontSize: '12px', color: '#0e4573', textDecoration: 'underline', textTransform: 'uppercase' }}>{this.props.author_a=== '' ? 'Course Director':this.props.author_a}</h2>
+                            <h2 style={{ fontSize: '12px', color: 'black', textDecoration: 'underline', textTransform: 'uppercase' }}>{this.props.author_a=== '' ? 'Course Director':this.props.author_a}</h2>
                         </div>
                         <div className="author1" style={{ position: 'absolute', top: '65%', left: '5%', width: '30%', textAlign: 'center' }}>
-                            <h1 style={{ fontSize: '15px', color: '#ff9800', textTransform: 'uppercase' }}>{this.props.author1 === '' ? 'Author Name' : this.props.author1}</h1>
+                            <h1 style={{ fontSize: '15px', color: 'black', textTransform: 'uppercase' }}>{this.props.author1 === '' ? 'Author Name' : this.props.author1}</h1>
                             {this.props.ttd1 === '' ? "" : <img src={this.props.ttd1} style={{ position: 'absolute', width: '5rem', borderRadius: '0%', top: '200%', left: '30%' }} alt="ttd1" />}
                         </div>
                         </div>
                         <div style={{left: '90%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>                            
                         <div className="author" style={{ position: 'absolute', top: '59%', left: '70%', width: '20%', textAlign: 'center' }}>
-                            <h2 style={{ fontSize: '12px', color: '#0e4573', textDecoration: 'underline', textTransform: 'uppercase' }}>{this.props.author_b=== '' ? 'Course Director':this.props.author_b}</h2>
+                            <h2 style={{ fontSize: '12px', color: 'black', textDecoration: 'underline', textTransform: 'uppercase' }}>{this.props.author_b=== '' ? 'Course Director':this.props.author_b}</h2>
                         </div>
                         <div className="author2" style={{ position: 'absolute', top: '65%', left: '65%',  width: '30%', textAlign: 'center' }}>
-                            <h1 style={{ fontSize: '15px', color: '#ff9800', textTransform: 'uppercase' }}>{this.props.author2 === '' ? 'Author2 Name' : this.props.author2}</h1>
+                            <h1 style={{ fontSize: '15px', color: 'black', textTransform: 'uppercase' }}>{this.props.author2 === '' ? 'Author2 Name' : this.props.author2}</h1>
                             {this.props.ttd2 === '' ? "" : <img src={this.props.ttd2} style={{ position: 'absolute', width: '5rem', borderRadius: '0%', top: '200%', right: '30%' }} alt="ttd2" />}
                         </div>
                         </div>
-                        {this.props.logo === '' ? "" : <img src={this.props.logo} style={{ position: 'absolute', width: '4rem', borderRadius: '0%', top: '5%', right: '85%' }} alt="logo" />}
-                        <QRCodeCanvas style={{ position: 'absolute', borderRadius: '0%', top: '70%', left: '42.5%' }} value={value} />
+                        {this.props.logo === '' ? "" : <img src={this.props.logo} style={{ position: 'absolute', width: '4rem', borderRadius: '0%', top: '5%', right: '5%' }} alt="logo" />}
+                        <QRCodeCanvas className='QR' style={{ position: 'absolute', borderRadius: '0%', top: '70%', left: '42.5%' }} value={`http://172.16.10.53:3000/verify?id=["${this.props.certID}"]`}/>
+                        <p style={{ position: 'absolute', borderRadius: '0%', top: '95%', left: '50%', fontSize: '15px', color: 'black' }}>ID={this.props.certID === '' ? '' : this.props.certID}</p>
                     </div>
                 );
             }
@@ -116,29 +117,29 @@ export class ComponentToPrint extends React.PureComponent {
                         </div>
                         <div className="Nama_psrt" style={{ position: 'absolute', top: '35%',left:'10%',  width: '80%',textAlign:'center' }}>
                             <h1  style={{ fontSize: '3rem', color: '#33d5ac' }}>{this.props.name === '' ? 'Name' : this.props.name}</h1>
-                            <p className='info' style={{ fontSize: '15px', fontWeight: '600', color: '#ff9800' }}>{this.props.desc === '' ? 'for the active participation in the event and for giving efforts,ideas and Knowledge.' : this.props.desc}</p>
+                            <p className='info' style={{ fontSize: '15px', fontWeight: '600', color: 'black' }}>{this.props.desc === '' ? 'for the active participation in the event and for giving efforts,ideas and Knowledge.' : this.props.desc}</p>
                         </div>
                         <div style={{left:'90%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                         <div className="author" style={{ position: 'absolute', top: '59%', left: '10%', width: '20%', textAlign: 'center' }}>
-                            <h2 style={{ fontSize: '12px', color: '#0e4573', textDecoration: 'underline', textTransform: 'uppercase' }}>{this.props.author_a=== '' ? 'Course Director':this.props.author_a}</h2>
+                            <h2 style={{ fontSize: '12px', color: 'black', textDecoration: 'underline', textTransform: 'uppercase' }}>{this.props.author_a=== '' ? 'Course Director':this.props.author_a}</h2>
                         </div>
                         <div className="author1" style={{ position: 'absolute', top: '65%', left: '5%', width: '30%', textAlign: 'center' }}>
-                            <h1 style={{ fontSize: '15px', color: '#ff9800', textTransform: 'uppercase' }}>{this.props.author1 === '' ? 'Author Name' : this.props.author1}</h1>
+                            <h1 style={{ fontSize: '15px', color: 'black', textTransform: 'uppercase' }}>{this.props.author1 === '' ? 'Author Name' : this.props.author1}</h1>
                             {this.props.ttd1 === '' ? "" : <img src={this.props.ttd1} style={{ position: 'absolute', width: '5rem', borderRadius: '0%', top: '200%', left: '30%' }} alt="ttd1" />}
                         </div>
                         </div>
                         <div style={{left: '90%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>                            
                         <div className="author" style={{ position: 'absolute', top: '59%', left: '70%', width: '20%', textAlign: 'center' }}>
-                            <h2 style={{ fontSize: '12px', color: '#0e4573', textDecoration: 'underline', textTransform: 'uppercase' }}>{this.props.author_b=== '' ? 'Course Director':this.props.author_b}</h2>
+                            <h2 style={{ fontSize: '12px', color: 'black', textDecoration: 'underline', textTransform: 'uppercase' }}>{this.props.author_b=== '' ? 'Course Director':this.props.author_b}</h2>
                         </div>
                         <div className="author2" style={{ position: 'absolute', top: '65%', left: '65%',  width: '30%', textAlign: 'center' }}>
-                            <h1 style={{ fontSize: '15px', color: '#ff9800', textTransform: 'uppercase' }}>{this.props.author2 === '' ? 'Author2 Name' : this.props.author2}</h1>
+                            <h1 style={{ fontSize: '15px', color: 'black', textTransform: 'uppercase' }}>{this.props.author2 === '' ? 'Author2 Name' : this.props.author2}</h1>
                             {this.props.ttd2 === '' ? "" : <img src={this.props.ttd2} style={{ position: 'absolute', width: '5rem', borderRadius: '0%', top: '200%', right: '30%' }} alt="ttd2" />}
                         </div>
                         </div>
                         {this.props.logo === '' ? "" : <img src={this.props.logo} style={{ position: 'absolute', width: '4rem', borderRadius: '0%', top: '5%', right: '5%' }} alt="logo" />}
-                        <QRCodeCanvas style={{ position: 'absolute', borderRadius: '0%', top: '70%', left: '42.5%' }} value={value} />
-        
+                        <QRCodeCanvas className='QR' style={{ position: 'absolute', borderRadius: '0%', top: '70%', left: '42.5%' }} value={`http://172.16.10.53:3000/verify?id=["${this.props.certID}"]`}/>
+                        <p style={{ position: 'absolute', borderRadius: '0%', top: '95%', left: '50%', fontSize: '15px', color: 'black' }}>ID={this.props.certID === '' ? '' : this.props.certID}</p>
                     </div>
                 );
             }
@@ -157,25 +158,26 @@ export class ComponentToPrint extends React.PureComponent {
                             <p className='info' style={{ fontSize: '15px', fontWeight: '600', color: 'black' }}>{this.props.desc === '' ? 'for the active participation in the event and for giving efforts,ideas and Knowledge.' : this.props.desc}</p>
                         </div>
                         <div style={{left:'90%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-                        <div className="author" style={{ position: 'absolute', top: '54%', left: '10%', width: '20%', textAlign: 'center' }}>
-                            <h2 style={{ fontSize: '12px', color: 'black', textDecoration: 'underline', textTransform: 'uppercase', left:'90%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>{this.props.author_a=== '' ? 'Course Director':this.props.author_a}</h2>
+                        <div className="author" style={{ position: 'absolute', top: '59%', left: '10%', width: '20%', textAlign: 'center' }}>
+                            <h2 style={{ fontSize: '12px', color: 'black', textDecoration: 'underline', textTransform: 'uppercase' }}>{this.props.author_a=== '' ? 'Course Director':this.props.author_a}</h2>
                         </div>
-                        <div className="author1" style={{ position: 'absolute', top: '60%', left: '5%', width: '30%', textAlign: 'center' }}>
-                            <h1 style={{ fontSize: '12px', color: 'black', textTransform: 'uppercase' }}>{this.props.author1 === '' ? 'Author Name' : this.props.author1}</h1>
+                        <div className="author1" style={{ position: 'absolute', top: '65%', left: '5%', width: '30%', textAlign: 'center' }}>
+                            <h1 style={{ fontSize: '15px', color: 'black', textTransform: 'uppercase' }}>{this.props.author1 === '' ? 'Author Name' : this.props.author1}</h1>
                             {this.props.ttd1 === '' ? "" : <img src={this.props.ttd1} style={{ position: 'absolute', width: '5rem', borderRadius: '0%', top: '200%', left: '30%' }} alt="ttd1" />}
                         </div>
                         </div>
                         <div style={{left: '90%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>                            
-                        <div className="author" style={{ position: 'absolute', top: '54%', left: '70%', width: '20%', textAlign: 'center' }}>
+                        <div className="author" style={{ position: 'absolute', top: '59%', left: '70%', width: '20%', textAlign: 'center' }}>
                             <h2 style={{ fontSize: '12px', color: 'black', textDecoration: 'underline', textTransform: 'uppercase' }}>{this.props.author_b=== '' ? 'Course Director':this.props.author_b}</h2>
                         </div>
-                        <div className="author2" style={{ position: 'absolute', top: '60%', left: '65%',  width: '30%', textAlign: 'center' }}>
-                            <h1 style={{ fontSize: '12px', color: 'black', textTransform: 'uppercase' }}>{this.props.author2 === '' ? 'Author2 Name' : this.props.author2}</h1>
+                        <div className="author2" style={{ position: 'absolute', top: '65%', left: '65%',  width: '30%', textAlign: 'center' }}>
+                            <h1 style={{ fontSize: '15px', color: 'black', textTransform: 'uppercase' }}>{this.props.author2 === '' ? 'Author2 Name' : this.props.author2}</h1>
                             {this.props.ttd2 === '' ? "" : <img src={this.props.ttd2} style={{ position: 'absolute', width: '5rem', borderRadius: '0%', top: '200%', right: '30%' }} alt="ttd2" />}
                         </div>
                         </div>
                         {this.props.logo === '' ? "" : <img src={this.props.logo} style={{ position: 'absolute', width: '4rem', borderRadius: '0%', top: '5%', right: '5%' }} alt="logo" />}
-                        <QRCodeCanvas style={{ position: 'absolute', borderRadius: '0%', top: '70%', left: '42.5%' }} value={this.props.ttd2==='' ? '':<img/>} />
+                        <QRCodeCanvas className='QR' style={{ position: 'absolute', borderRadius: '0%', top: '70%', left: '42.5%' }} value={`http://172.16.10.53:3000/verify?id=["${this.props.certID}"]`}/>
+                        <p style={{ position: 'absolute', borderRadius: '0%', top: '95%', left: '50%', fontSize: '15px', color: 'black' }}>ID={this.props.certID === '' ? '' : this.props.certID}</p>
                     </div>
                 );
             }
@@ -205,7 +207,9 @@ const Popup = (props) => {
     ) : null;
 }
 
-function Generator() {
+function Generator(editData) {
+    // console.log(editData.editData);
+    const navigate = useNavigate();
     const [pop, setpop] = useState(false);
     const [name, setname] = useState('');
     const [heading, setheading] = useState('');
@@ -221,15 +225,74 @@ function Generator() {
     const componentRef = useRef();
     const [theme, setTheme] = useState("dark");
     const [certID, setCertID] = useState("");
+    const [imgSert, setImgSert] = useState("");
     const [msg, setMsg]= useState("");
     const [text,setText]=useState('');
+    const [txId, setTxId]=useState('');
+    const [submitType, setSubmitType]=useState("Generate Certificate");
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
+    const isObjectEmpty = (objName) => {
+        console.log(objName.editData.status);
+        return JSON.stringify(objName) === "{}";
+    }
+    // console.log(`editData: ${editData}`);
+    // console.log(`editData2: ${isObjectEmpty(editData)}`);
+
+    // const checkBulk = (evt) => {
+    //     var f = evt.target.files[0]; 
+    //     if (f) {
+    //         var r = new FileReader();
+    //         r.onload = function(e) { 
+    //             var contents = e.target.result;
+    //             document.write("File Uploaded! <br />" + "name: " + f.name + "<br />" + "content: " + contents + "<br />" + "type: " + f.type + "<br />" + "size: " + f.size + " bytes <br />");
+    
+    //             var lines = contents.split("\n"), output = [];
+    //             for (var i=0; i<lines.length; i++){
+    //             output.push("<tr><td>" + lines[i].split(",").join("</td><td>") + "</td></tr>");
+    //             }
+    //             output = "<table>" + output.join("") + "</table>";
+    //             document.write(output);
+    //         }
+    //         r.readAsText(f);
+    //         document.write(output);
+    //     } else { 
+    //         alert("Failed to load file");
+    //     }
+    // }
+
+    const checkData = () => {
+        if (editData.editData.Nama) {
+            console.log("rute edit");
+            // console.log(editData.editData.Acara);
+            setSubmitType("Update Certificate")
+            setname(editData.editData.Nama);
+            setheading(editData.editData.Acara);
+            setdesc(editData.editData.Deskripsi);
+            setauthor_a(editData.editData.Author1);
+            setauthor_b(editData.editData.Author2);
+            setauthor1(editData.editData.Jabatan1);
+            setauthor2(editData.editData.Jabatan2);
+            setlogo(editData.editData.Logo);
+            setttd1(editData.editData.TTD1);
+            setttd2(editData.editData.TTD2);
+            setCertID(editData.editData.ID);
+            setTxId(editData.editData.txId);
+        }
+    }
 
     useEffect(() => {
         dispatch(getMe());
-        
+        checkData();
       }, [dispatch]);
+
+    useEffect(() => {
+        checkData();
+    }, [editData]);
+
+    useEffect(() => {
+        handleConvert();
+    });
 
     function getCookie(cName) {
         const name = cName + "=";
@@ -288,30 +351,40 @@ function Generator() {
 
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
-    });
+    }); 
+    
     const downloadRef = useRef();
 
     const handleConvert = () => {
         const targetEl = downloadRef.current;
         domtoimage.toJpeg(targetEl, { quality: 0.95 }).then((dataUrl) => {
-            console.log(dataUrl);
-            return dataUrl;
+            // console.log(dataUrl);
+            setImgSert(dataUrl);
         });
+        // return dataOut;
         // console.log(ttd1);
         // console.log(ttd2);
         //console.log(targetEl);
     }
 
-    const handleCheck = async (e) => {
-        _generateRandomID();
-        // certID=randomID;
-        const gmbr = handleConvert();
-        console.log(gmbr);
+    const _generateRandomID = async () => {
+        let prefix = "";
+        let length = 10;
+        let ID = prefix + Math.random().toString(36).substring(2, length);
+        await setCertID(ID.toString());
+        // console.log(ID.toString());
+        // return(console.log("safe"))
+        // return ID.toString();
+    }
+
+    const printData = async () => {
         console.log([
             certID,
+            logo,
             heading,
             user.name,
             name,
+            "Webinar",
             desc,
             author_a,
             author1,
@@ -319,64 +392,129 @@ function Generator() {
             author_b,
             author2,
             ttd2,
+            imgSert
         ])
     }
 
-    const qrrr =(e)=>{
+    const handleCheck = async (e) => {
+        await _generateRandomID();
+        // certID=randomID;
+        const gmbr = await handleConvert();
+        if(certID){
+            printData();
+        }
+        // console.log(imgSert);
+    }
+
+    const qrrr =(e)=>{checkData();
         setCertID(e.target.value)
     }
 
     const handleUpload = async (e) => {
-        _generateRandomID();
-        e.preventDefault();
+        await _generateRandomID();
+        const gmbr = handleConvert();
+        // console.log(certID);
+        if(certID ){
+            try {
+                await axios.post("http://172.16.10.53:4000/channels/mychannel/chaincodes/basic", {
+                    fcn: "CreateAsset",
+                    peers: ["peer0.org1.example.com","peer0.org2.example.com"],
+                    chaincodeName: "basic",
+                    channelName: "mychannel",
+                    args: [
+                        certID,
+                        logo,
+                        heading,
+                        user.name,
+                        name,
+                        "Webinar",
+                        desc,
+                        author_a,
+                        author1,
+                        ttd1,
+                        author_b,
+                        author2,
+                        ttd2,
+                        imgSert
+                    ]
+                }
+                ,{
+                    withCredentials: false,
+                    headers: {
+                        Authorization: `Bearer ${getCookie("myCookie")}`
+                    },
+                }
+                );
+                } catch (error) {
+                    if(error.response){
+                        setMsg(error.response.data.msg)
+                }
+            }
+        }
+    }
+
+    const handleUpdate = async (e) => {
+        const gmbr = handleConvert();
         try {
-        await axios.post("http://localhost:4000/channels/mychannel/chaincodes/basic", {
-            fcn: "CreateAsset",
-            peers: ["peer0.org1.example.com","peer0.org2.example.com"],
-            chaincodeName: "basic",
-            channelName: "mychannel",
-            args: [
-                certID,
-                heading,
-                user.name,
-                name,
-                "Webinar",
-                desc,
-                ttd1,
-                ttd2,
-                certID
-            ]
-        }
-        , {
-            withCredentials: false,
-            headers: {
-                Authorization: `Bearer ${getCookie("myCookie")}`
-            },
-        }
-        );
-        } catch (error) {
-            if(error.response){
-                setMsg(error.response.data.msg)
-        }
+            await axios.put("http://172.16.10.53:4000/channels/mychannel/chaincodes/basic", {
+                peers: ["peer0.org1.example.com","peer0.org2.example.com"],
+                chaincodeName: "basic",
+                channelName: "mychannel",
+                args: [
+                    certID,
+                    logo,
+                    heading,
+                    user.name,
+                    name,
+                    "Webinar",
+                    desc,
+                    author_a,
+                    author1,
+                    ttd1,
+                    author_b,
+                    author2,
+                    ttd2,
+                    imgSert
+                ]
+            }
+            ,{
+                withCredentials: false,
+                headers: {
+                    Authorization: `Bearer ${getCookie("myCookie")}`
+                },
+            }
+            );
+            } catch (error) {
+                if(error.response){
+                    setMsg(error.response.data.msg)
+            }
         }
     }
 
-    const _generateRandomID = () => {
-        let prefix = "";
-        let length = 10;
-        let ID = prefix + Math.random().toString(36).substring(2, length);
-        setCertID(ID.toString());
-        // return ID.toString();
+    const postSelector = () => {
+        if(submitType === "Generate Certificate"){
+            handleUpload();
+            navigate('/');
+            // handleCheck();
+        }
+        else if(submitType === "Update Certificate"){
+            handleUpdate();
+            navigate('/');
+            // handleCheck();
+        }
     }
 
-      
+    const handleConfirm = () => {
+
+    }
+
     return (
-        <div className="main" style={{background: (theme == "dark")?"rgb(28, 39, 43)":"white"}}>
+        <div className="main" style={{background: (theme == "dark")?"#EEEEEE":"white"}}>
             <Popup trigger={pop} setpop={setpop} >
             </Popup>
             <div className="maincontainer">
                 <div className="leftmost">
-                    <h1 style={{color: (theme == "dark")?"white":"rgb(28, 39, 43)"}}>Templates</h1>
+                    <h1 style={{color: "black"}}>Templates</h1>
                              <div className={`templates ${template==='template1'?"active":""}`} onClick={()=>settemplate("template1")} >
                         <img src={template1} alt="" />
                     </div>
@@ -390,7 +528,7 @@ function Generator() {
                         <img src={template4} alt="" />
                     </div>
                 </div>
-                <div className="middle" >
+                <div className="middle">
                     <div ref={downloadRef}>
                         <ComponentToPrint ref={componentRef} name={name} heading={heading} desc={desc} author_a={author_a} author_b={author_b} author1={author1} author2={author2} logo={logo} ttd1={ttd1} ttd2={ttd2} certID={certID} template={template} />
                     </div>
@@ -398,52 +536,53 @@ function Generator() {
                 <div className="right">
                     <div className="form">
                         <div className="input-box">
-                            <span className="details" style={{color: (theme == "dark")?"white":"rgb(28, 39, 43)"}}>Event</span>
-                            <input type="text" placeholder="Enter Certification" onChange={e => { setheading(e.target.value) }} />
+                            <span className="details" style={{color: "black"}}>Event</span>
+                            <input type="text" value={heading} placeholder='Enter Heading' onChange={e => { setheading(e.target.value) }} />
                         </div>
                         <div className="input-box">
-                            <span className="details" style={{color: (theme == "dark")?"white":"rgb(28, 39, 43)"}}>Particpant Name</span>
-                            <input className='Nama_psrt' value={text} type="text" placeholder="Enter participant Name" onChange={handleChange} maxLength={18} />
+                            <span className="details" style={{color: 'black'}}>Particpant Name</span>
+                            <input className='Nama_psrt' value={name} placeholder="Enter Participant Name" type="text" onChange={handleChange} maxLength={18} />
                         </div>
                         <div className="input-box">
-                            <span className="details" style={{color: (theme == "dark")?"white":"rgb(28, 39, 43)"}}>Description</span>
-                            <textarea type="text" placeholder="Enter Description" onChange={e => setdesc(e.target.value)} maxLength={155}/>
+                            <span className="details" style={{color: 'black'}}>Description</span>
+                            <textarea type="text" value={desc} placeholder="Enter Description" onChange={e => setdesc(e.target.value)} maxLength={155}/>
                         </div>
                         <div className="input-box">
-                            <span className="details" style={{color: (theme == "dark")?"white":"rgb(28, 39, 43)"}}>Author Posisistion</span>
-                            <input type="text" placeholder="Enter Author Posisition" onChange={e => setauthor_a(e.target.value)} />
+                            <span className="details" style={{color: 'black'}}>Author Posisistion</span>
+                            <input type="text" value={author_a} placeholder="Enter Author Posisition" onChange={e => setauthor_a(e.target.value)} />
                         </div>
                         <div className="input-box">
-                            <span className="details" style={{color: (theme == "dark")?"white":"rgb(28, 39, 43)"}}>Author Name</span>
-                            <input type="text" placeholder="Enter Author Name" onChange={e => setauthor1(e.target.value)} />
+                            <span className="details" style={{color: 'black'}}>Author Name</span>
+                            <input type="text" value={author1} placeholder="Enter Author Name" onChange={e => setauthor1(e.target.value)} />
                         </div>
                         <div className="input-box">
-                            <span className="details" style={{color: (theme == "dark")?"white":"rgb(28, 39, 43)"}}>Author Posisistion</span>
-                            <input type="text" placeholder="Enter Author Posisition" onChange={e => setauthor_b(e.target.value)} />
+                            <span className="details" style={{color: 'black'}}>Author Posisistion</span>
+                            <input type="text" value={author_b} placeholder="Enter Author Posisition" onChange={e => setauthor_b(e.target.value)} />
                         </div>
                         <div className="input-box">
-                            <span className="details" style={{color: (theme == "dark")?"white":"rgb(28, 39, 43)"}}>Author2 Name</span>
-                            <input type="text" placeholder="Enter Author2 Name" onChange={e => setauthor2(e.target.value)} />
+                            <span className="details" style={{color: 'black'}}>Author2 Name</span>
+                            <input type="text" value={author2} placeholder="Enter Author2 Name" onChange={e => setauthor2(e.target.value)} />
                         </div>
                         <div >
-                            <span className="details" style={{color: (theme == "dark")?"white":"rgb(28, 39, 43)"}}>Logo</span>
+                            <span className="details" style={{color: 'black'}}>Logo</span>
                             <br style={{height:"10px"}}></br>
-                            <input className='filetype' type='file' onChange={logoChange} accept='.jpg, .png, .jpeg, .bmp|image/*' style={{color: (theme == "dark")?"white":"rgb(28, 39, 43)"}}/>
+                            <input className='filetype' type='file' onChange={logoChange} accept='.jpg, .png, .jpeg, .bmp|image/*' style={{color:'black'}}/>
                         </div>
 
                         <div >
-                            <span className="details" style={{color: (theme == "dark")?"white":"rgb(28, 39, 43)"}}>Tanda Tangan 1</span>
+                            <span className="details" style={{color: 'black'}}>Tanda Tangan 1</span>
                             <br style={{height:"10px"}}></br>
-                            <input className='filetype' type='file' onChange={ttd1Change} accept='.jpg, .png, .jpeg, .bmp|image/*' style={{color: (theme == "dark")?"white":"rgb(28, 39, 43)"}}/>
+                            <input className='filetype' type='file' onChange={ttd1Change} accept='.jpg, .png, .jpeg, .bmp|image/*' style={{color: 'black'}}/>
                         </div>
 
                         <div >
-                            <span className="details" style={{color: (theme == "dark")?"white":"rgb(28, 39, 43)"}}>Tanda Tangan 2</span>
+                            <span className="details" style={{color: 'black'}}>Tanda Tangan 2</span>
                             <br style={{height:"10px"}}></br>
-                            <input className='filetype' type='file' onChange={ttd2Change} accept='.jpg, .png, .jpeg, .bmp|image/*' style={{color: (theme == "dark")?"white":"rgb(28, 39, 43)"}}/>
+                            <input className='filetype' type='file' onChange={ttd2Change} accept='.jpg, .png, .jpeg, .bmp|image/*' style={{color: 'black'}}/>
                         {/* {qrrr() } */}
                         </div>
-                        <button className="generate" onClick={() => handleCheck()}>Generate  Certificate</button>
+                        <button className="generate" onClick={() => postSelector()}>{submitType}</button>
+                        {/* <button className="generate" onChange={checkBulk}>Check CSV</button> */}
                         {/* <ReactToPrint
                             trigger={() => <button className="generate" >Print this out!</button>}
                             content={() => componentRef.current}

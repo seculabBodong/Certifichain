@@ -113,6 +113,7 @@
   font-size: '20px';
 
 }
+
 .info{
   word-wrap: break-word;
   word-break: break-all;
@@ -216,7 +217,7 @@
 
 @media print {
   html, body {
-    height: initial !important;
+    height: initial !;
     overflow: initial !important;
     -webkit-print-color-adjust: exact;
   }

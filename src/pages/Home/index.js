@@ -1,6 +1,6 @@
 import "../../components/Home.css";
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, createSearchParams } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import award from "../../assets/award1.png";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,7 +20,10 @@ import { LoginBlockchain } from "../../features/authSlice";
 import iconpdf from "../../assets/file-download.png";
 import iconcheck from "../../assets/icon_checkmark.png";
 import iconcross from "../../assets/close-circle.png";
-import { handleApprove, handleNotApprove } from "../../features/adminService"
+import { handleApprove, handleNotApprove } from "../../features/adminService";
+import ArrowForwardIos from "@mui/icons-material/ArrowForwardIos";
+import IconButton from "@mui/material/IconButton";
+import { Button } from "@mui/material";
 
 export function Home() {
   const dispatch = useDispatch();
@@ -32,26 +35,83 @@ export function Home() {
   const [email, setEmail] = useState(null);
   const [role, setRole] = useState("");
   const [ status, setStatus ] = useState("");
-  const [orgname, setOrgname] = useState("Org1");
+  const [orgname, setOrgname] = useState();
   const { isError } = useSelector((state) => state.auth);
   const { user } = useSelector((state) => state.auth);
   const { blockchainUser } = useSelector((state) => state.auth);
   const currentState = store.getState();
+  const [infoText, setInfoText] = useState("");
+  const [result, setResult] = useState("");
+  const [fileUrl, setFileUrl] = useState("");
+  const [isActive, setIsActive] = useState(false);
+
+  const fetchRequest = (file, formData) => {
+    fetch("http://api.qrserver.com/v1/read-qr-code/", {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        result = result[0].symbol[0].data;
+        setInfoText(result ? "success" : "Couldn't scan QR Code");
+        if (!result) return;
+        setResult(result);
+        setFileUrl(URL.createObjectURL(file));
+        setIsActive(true);
+        if (result!=''){
+          navigate('/verify',{state:{hasil:{result}}});
+        }
+      })
+      .catch(() => {
+        setInfoText("Couldn't scan QR Code");
+      });
+  };
+
+  const handleFileChange = async (a) => {
+    let file = a.target.files[0];
+    if (!file) return;
+    let formData = new FormData();
+    formData.append("file", file);
+    fetchRequest(file, formData);
+    // navigate('/verify',{state:{result}});
+    // await("500ms")
+    // console.log(result);
+    // if (result!=''){
+    //   navigate('/verify',{state:{hasil:{result}}});
+    // }
+    
+  };
+
+  // const test =()=>{
+  //   if (result!='') {
+  //     navigate('/verify',{state:{hasil:result}});
+  //   }
+  //   else {
+  //     console.log(result);
+  //   }
+  // }
+
+  const gabung =()=>{
+    handleFileChange();
+    if (result!=='') {
+      test();
+    }
+  }
 
   useEffect(() => {
     dispatch(getMe());
     getAsset();
-    
-  }, [dispatch]);
+  }, [dispatch, orgname]);
 
   useEffect(() => {
     // console.log(user.role);
     if (user) {
+      setOrgname(user.name);
       setRole(user.role);
       setStatus(user.status);
     }
     getUser();
-  }, [user, role]);
+  }, [user, role, orgname]);
 
   function getCookie(cName) {
     const name = cName + "=";
@@ -59,6 +119,7 @@ export function Home() {
     const cArr = cDecoded.split("; ");
     let res;
     cArr.forEach((val) => {
+      // console.log(result)
       if (val.indexOf(name) === 0) res = val.substring(name.length);
     });
     return res;
@@ -68,7 +129,7 @@ export function Home() {
     console.log("ALHAMDULILAH");
     try {
       const response = await axios.get(
-        `http://localhost:4000/dashboard?args=["Organisasi_Keamanan"]&peer=peer0.org1.example.com&fcn=AssetByOrganisasi`,
+        `http://172.16.10.53:4000/dashboard?args=["${orgname}"]&peer=peer0.org1.example.com&fcn=AssetByOrganisasi`,
         {
           withCredentials: false,
           headers: {
@@ -89,10 +150,14 @@ export function Home() {
     }
   };
 
+  const toInput = () => {
+    navigate("/input")
+  }
+
   const getUser = async () => {
     console.log("MANTAP");
     try {
-      const response = await axios.get(`http://localhost:5000/users`);
+      const response = await axios.get(`http://172.16.10.53:5000/users`);
       // console.log(response.data);
       setUserList(response.data);
       const filterApprove = userList.filter(
@@ -117,6 +182,10 @@ export function Home() {
   // console.log(userApprove);
   // console.log(userNotApprove);
 
+  const openNewTab = (url) => {
+    window.open(url, "_blank", "noreferer");
+  }
+  
   return (
     <>
       {!user && (
@@ -133,7 +202,18 @@ export function Home() {
                 <text>atau</text>
                 <div className="pilih-file-home">
                   <label for="upload-file">Pilih File</label>
-                  <input type="file" name="photo" id="upload-file" />
+                  <input type="file" name="photo" id="upload-file" onChange={handleFileChange}>
+                  </input>
+                  {/* {test =()=>{
+                      if (result!='') {
+                        navigate('/verify',{state:{hasil:result}});
+                      }
+                      else {
+                        console.log(result);
+                      }
+                    }} */}
+                    <p>{infoText}</p>
+                    {console.log(result)}
                 </div>
               </div>
             </div>
@@ -147,19 +227,12 @@ export function Home() {
               style={{ fontSize: 32, fontWeight: "bold" }}
               className="dashboard-user readex-pro"
             >
-              HI, {user.name}
+              HI, {orgname}
             </div>
-            <div className="dashboard-optionbox">
-              <img src={addCert} className="dashboard-optionbox-icon" />
-              <Link
-                to="/input"
-                style={{ textDecoration: "none", color: "white" }}
-              >
-                Input
-              </Link>
-              <div style={{ fontSize: 26 }} className="readex-pro">
+            <div>
+              <Button className="dashboard-optionbox" variant="outlined" onClick={() => toInput()} startIcon={<img src={addCert} className="dashboard-optionbox-icon" />}>
                 Create
-              </div>
+              </Button>
             </div>
             <div className="dashboard-certlist">
               <div
@@ -185,9 +258,19 @@ export function Home() {
                         <TableRow>
                           <TableCell>{home.Acara}</TableCell>
                           <TableCell align="right">{home.Organisasi}</TableCell>
-                          <TableCell align="right">10 Feb 2023</TableCell>
-                          <TableCell align="right">16 Mar 2023</TableCell>
-                          <TableCell align="right">{">"}</TableCell>
+                          <TableCell align="right">{home.time.createDate}</TableCell>
+                          <TableCell align="right">{home.time.lastModified}</TableCell>
+                          <TableCell align="right">
+                            <IconButton onClick={() => navigate({
+                              pathname: "/event",
+                              search: createSearchParams({
+                               acara: home.Acara,
+                               org: home.Organisasi
+                              }).toString()
+                            })}>
+                              <ArrowForwardIos />
+                            </IconButton>
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -237,6 +320,7 @@ export function Home() {
                         <td className="center-td">
                           <img
                             src={iconpdf}
+                            onClick={() => openNewTab(`${home.urlDoc}`)}
                             className="dashboard-optionbox-icon"
                           />
                         </td>
@@ -289,6 +373,7 @@ export function Home() {
                           <img
                             src={iconpdf}
                             className="dashboard-optionbox-icon"
+                            onClick={() => openNewTab(`${home.urlDoc}`)}
                           />
                         </td>
                         <td>{home.status}</td>

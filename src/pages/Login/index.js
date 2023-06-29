@@ -17,14 +17,14 @@ export function Login() {
 
   useEffect(() => {
     if (user || isSuccess || blockchainUser) {
-      // console.log(user);
-      // console.log(isSuccess);
+      console.log(user);
+      console.log(isSuccess);
       document.cookie = `myCookie=${blockchainUser.token}`;
       // console.log(document.cookie);
       navigate("/");
     }
-    // dispatch(reset());
-  }, [user, isSuccess, dispatch, navigate]);
+    dispatch(reset());
+  }, [user, isSuccess, dispatch, navigate, blockchainUser]);
 
   const Auth = (e) => {
     e.preventDefault();
@@ -102,7 +102,7 @@ export function Login() {
           <div className="formField">
             <span className="infoText">
               Belum memliki akun?
-              <NavLink className="signUp"> signup </NavLink>
+              <NavLink className="signUp" to="/signup"> signup </NavLink>
             </span>
           </div>
         </div>

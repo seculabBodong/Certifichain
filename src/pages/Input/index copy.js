@@ -66,7 +66,7 @@ export function Input() {
   const handleInput = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:4000/channels/mychannel/chaincodes/basic`,
+        `http://172.16.10.53:4000/channels/mychannel/chaincodes/basic`,
         {
           fcn: "CreateAsset",
           peers: ["peer0.org1.example.com", "peer0.org2.example.com"],
