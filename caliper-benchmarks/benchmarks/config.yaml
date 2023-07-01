@@ -1,0 +1,51 @@
+test:
+  name: basic-contract-benchmark
+  description: test benchmark
+  workers:
+    type: local
+    number: 2
+  rounds:
+    - label: Create Cert
+      txNumber: 10
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 5
+      workload: 
+        module: workload/scenario/createCertificate.js
+
+    - label: Update Cert
+      txNumber: 10
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 5
+      workload: 
+        module: workload/scenario/updateCertificate.js
+
+    - label: Read Cert
+      txNumber: 10
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 5
+      workload: 
+        module: workload/scenario/readCertificate.js
+
+    - label: Delete Cert
+      txNumber: 10
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 5
+      workload: 
+        module: workload/scenario/deleteCertificate.js
+
+monitor:
+  monitor:
+  type:
+  - docker
+  docker:  
+    containers:
+    - all
+  interval: 1   
