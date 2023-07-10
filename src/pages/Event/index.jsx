@@ -23,11 +23,14 @@ export function Event(){
     const {isError} = useSelector((state => state.auth));
 
     const [open, setOpen] = React.useState(false);
+    const [indexx, setIndexx] = useState(0);
 
-    const handleClickOpen = () => {
+    const handleClickOpen = (index) => {
         setOpen(true);
+        // console.log("print");
+        setIndexx(index)
     };
-
+    
     const handleClose = () => {
         setOpen(false);
     };
@@ -98,7 +101,18 @@ export function Event(){
         dispatch(getMe());
         getParticipant();
     }, [dispatch]);
-    
+
+    const openNewWindow = (image) => {
+        const newWindow = window.open('', '_blank');
+        newWindow.document.write(`
+            <html>
+                <body>
+                    <img src="${image}" alt="Image"/>
+                </body>
+            </html>
+        `)
+    }
+
     return(
         <>
             <div>
@@ -110,55 +124,61 @@ export function Event(){
                             <img style={{ paddingRight: "12%"}} src={iconadd} className="dashboard-optionbox-icon"/>
                         </div>
                         <div style={{ margin: "1%"}}> 
-                        <table style={{fontSize: 16}}>
-                            <tr>
-                            <th>Nama</th>
-                            <th>Created Date</th>
-                            <th>Last Modified</th>
-                            <th>View</th>
-                            <th>Edit</th>
-                            <th>Hapus</th>
-                            </tr>
-                            {participant.map((home) => (
-                                <tr>
-                                <td>{home.Nama}</td>
-                                <td>{home.time.createDate}</td>
-                                <td>{home.time.lastModified}</td>
-                                <td>
-                                <IconButton>
-                                    <img src={iconpdf} className="dashboard-optionbox-icon" onClick={handleClickOpen}/>
-                                </IconButton>
-                                </td>
-                                <Dialog
-                                    open={open}
-                                    onClose={handleClose}
-                                    aria-labelledby="alert-dialog-title"
-                                    aria-describedby="alert-dialog-description"
-                                >
-                                    <img width='100%' height='100%' src={`${home.Certificate}`}/>
-                                    <IconButton onClick={() => handleDownload(home.Certificate)}>
-                                        <DownloadIcon />
-                                    </IconButton>
-                                </Dialog>
-                                <td>
-                                    <IconButton 
-                                        onClick={() => navigate({
-                                            pathname: "/input",
-                                            search: createSearchParams({
-                                                ID: home.ID
-                                            }).toString()
-                                    })}>
-                                        <img src={iconedit} className="dashboard-optionbox-icon" />
-                                    </IconButton>
-                                </td>
-                                <td>
-                                    <IconButton onClick={() => deleteAset(home.ID)}>
-                                        <img src={icondelete} className="dashboard-optionbox-icon" />
-                                    </IconButton>
-                                </td>
-                                </tr>
-                            ))}
-                        </table>
+                         {participant.length > 0 && (
+                            <table style={{fontSize: 16}}>
+                                <thead>
+                                    <tr>
+                                    <th>Nama</th>
+                                    <th>Created Date</th>
+                                    <th>Last Modified</th>
+                                    <th>View</th>
+                                    <th>Edit</th>
+                                    <th>Hapus</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {participant.map((home, index) => (
+                                        <tr key={index}>
+                                            <td>{home.Nama}</td>
+                                            <td>{home.time.createDate}</td>
+                                            <td>{home.time.lastModified}</td>
+                                            <td>
+                                            <IconButton>
+                                                <img src={iconpdf} className="dashboard-optionbox-icon" onClick={(() => handleClickOpen(index))}/>
+                                            </IconButton>
+                                            </td>
+                                            <td>
+                                                <IconButton 
+                                                    onClick={() => navigate({
+                                                        pathname: "/input",
+                                                        search: createSearchParams({
+                                                            ID: home.ID
+                                                        }).toString()
+                                                })}>
+                                                    <img src={iconedit} className="dashboard-optionbox-icon" />
+                                                </IconButton>
+                                            </td>
+                                            <td>
+                                                <IconButton onClick={() => deleteAset(home.ID)}>
+                                                    <img src={icondelete} className="dashboard-optionbox-icon" />
+                                                </IconButton>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                        <Dialog
+                                            open={open}
+                                            onClose={handleClose}
+                                            aria-labelledby="alert-dialog-title"
+                                            aria-describedby="alert-dialog-description"
+                                        >
+                                            <img width='100%' height='100%' src={participant[indexx]['Certificate']}/>
+                                            <IconButton onClick={() => handleDownload(participant[indexx]['Certificate'])}>
+                                                <DownloadIcon />
+                                            </IconButton>
+                                        </Dialog>
+                                    </tbody>
+                                </table>
+                            )}
                         </div>
                     </div>
                 </div>

@@ -53,8 +53,7 @@ export function Home() {
       .then((res) => res.json())
       .then((result) => {
         result = result[0].symbol[0].data;
-        setInfoText(result ? "success" : "Couldn't scan QR Code");
-        if (!result) return;
+        if (!result) {alert("Pembacaan Gagal! Harap cek format file");return};
         setResult(result);
         setFileUrl(URL.createObjectURL(file));
         setIsActive(true);
@@ -63,7 +62,7 @@ export function Home() {
         }
       })
       .catch(() => {
-        setInfoText("Couldn't scan QR Code");
+        alert("Couldn't scan QR Code");
       });
   };
 
@@ -138,8 +137,17 @@ export function Home() {
         }
       );
       // console.log(response.data);
-      setAset(response.data);
+      // setAset(response.data);
       // console.log(aset);
+      const myArray = [];
+          for(let i=0; i < response.data.length; i++){
+            const condition = myArray.every((item) => response.data[i]['Acara'] !== item.Acara);
+            if(condition){
+                myArray.push(response.data[i]);
+            }
+            // console.log(myArray);
+          }
+      setAset(myArray);
       return response.data;
     } catch (error) {
       if (error.response) {

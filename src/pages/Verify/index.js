@@ -33,7 +33,8 @@ export function Verify() {
   // let url=new URL(data)
   // const params=new URLSearchParams(url.search)
   // console.log(params.get('args'))
-  
+  // const params=new URLSearchParams(window.location.search)
+  // console.log(params.get("id"))
   const checkCurrentOption  = (nomor) =>{
       if(nomor === 0){
         setButtonActive(["aktif", "none", "none"]);
@@ -50,21 +51,21 @@ export function Verify() {
       // console.log(buttonActive)
       // console.log(currentOption)
     }
+    
 
-
-    useEffect(()=>{
     const getCertification = async () => {
+      
+      // if(!isStop){
       // const url = `http://172.16.10.53:4000/home?args=["zy621d33"]`;
       console.log("ALHAMDULILAH");
-      var data = location.state.hasil;
-      console.log(data)
-      data = `${data.result}`;
+      var data = location.state.hasil; 
+      console.log(data) 
+      data = `${data.result}`; 
       let url=new URL(data) 
-      const params=new URLSearchParams(url.search)
-      
-      try {
-        const response = await axios.get(
-          `http://172.16.10.53:4000/home?args=["${params.get('id').replace(/"/g,'').replace("[",'').replace("]",'')}"]`)
+      const params=new URLSearchParams(url.search) 
+      try { const response = await axios.get( 
+      `http://172.16.10.53:4000/home?args=["${params.get('id').replace(/"/g,'').replace("[",'').replace("]",'')}"]`) 
+      console.log(response.data); 
         // console.log(response.data);
         setCertificate(response.data); 
         // console.log(certificate.successs);
@@ -77,25 +78,27 @@ export function Verify() {
         return message;
       }
     }
+  // }
   }
+    useEffect(()=>{
+    // let isStop= false;
   getCertification();
+
 },[])
 
   
   const getHistory= async () => {
     // const url = `http://172.16.10.53:4000/home?args=["zy621d33"]`;
     console.log("ALHAMDULILAH");
-    var data = location.state.hasil;
-    // console.log(data)
-    data = `${data.result}`;
-    let url=new URL(data)
-    const params=new URLSearchParams(url.search)
-    
-    try {
-      const response = await axios.get(
-        `http://172.16.10.53:4000/history?args=["${params.get('id').replace(/"/g,'').replace("[",'').replace("]",'')}"]`)
-      console.log(response.data);
-      sethistory(response.data[0]); 
+    var data = location.state.hasil; 
+    console.log(data) 
+    data = `${data.result}`; 
+    let url=new URL(data) 
+    const params=new URLSearchParams(url.search) 
+    try { const response = await axios.get( 
+    `http://172.16.10.53:4000/history?args=["${params.get('id').replace(/"/g,'').replace("[",'').replace("]",'')}"]`) 
+    console.log(response.data); 
+      sethistory(response.data[response.data.length-1]); 
       // console.log(history);
       return response.data;
     } catch (error) {
@@ -108,7 +111,9 @@ export function Verify() {
 }
 
 
-
+  function timeout(ms){
+    return new Promise((resolve)=>setTimeout(resolve,ms));
+  }
   
   useEffect(() => {
     currentOption === "informasi" ? setInformasiTampil(true) : setInformasiTampil(false)
@@ -169,9 +174,11 @@ export function Verify() {
         checkmark : iconCheck,
       }))
     }
+    console.log('cek1')
   },[isLoading,certificate]);
 
   useEffect(()=>{
+    // getCertification();
     getHistory();
   }, [])
   //
@@ -243,15 +250,14 @@ export function Verify() {
         <div className="right-container">
           <div className="pop-verified" style={xstyle}>
             <img src={certificate.checkmark} style={{width: 50}}/>
-            {/* <div>SERTIFIKAT {certificate.statusnya}</div> */}
-            <div>SERTIFIKAT hahahaah</div>
+            <div>SERTIFIKAT {certificate.statusnya}</div>
             {/* {console.log(location.state.hasil)} */}
             <div>Sertifikat diterbitkan oleh {certificate.Organisasi} dari TELKOM UNIVERSITY</div>
             {/* {getCertification} */}
           </div>
           <div className="display-cert">
             {/* {console.log(certificate.Certificate)} */}
-            <img src={certificate.Certificate } className="display-cert-img"/>
+            <img src={certificate.Certificate} className="display-cert-img"/>
           </div>
           <div className="scan-other">
             Scan Lainnya

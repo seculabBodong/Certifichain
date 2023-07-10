@@ -9,16 +9,18 @@ import template3 from "../assets/cert_templates/Template3.png";
 import template4 from "../assets/cert_templates/Template4.jpeg";
 import ReactToPrint from 'react-to-print';
 import {QRCodeCanvas} from 'qrcode.react';
-import {
-    exportComponentAsJPEG,
-    exportComponentAsPDF,
-    exportComponentAsPNG
-  } from "react-component-export-image";
 import domtoimage from 'dom-to-image';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMe } from '../features/authSlice';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Papa from 'papaparse'
 
 const value="this is placeeeeholder";
 
@@ -212,6 +214,7 @@ function Generator(editData) {
     const navigate = useNavigate();
     const [pop, setpop] = useState(false);
     const [name, setname] = useState('');
+    const [nameCSV, setNameCSV]= useState('');
     const [heading, setheading] = useState('');
     const [desc, setdesc] = useState('');
     const [author_a, setauthor_a] = useState('');
@@ -225,17 +228,24 @@ function Generator(editData) {
     const componentRef = useRef();
     const [theme, setTheme] = useState("dark");
     const [certID, setCertID] = useState("");
+    const [currID, setCurrID] = useState("");
     const [imgSert, setImgSert] = useState("");
+    const [imgCSV, setImgCSV] = useState("");
     const [msg, setMsg]= useState("");
     const [text,setText]=useState('');
     const [txId, setTxId]=useState('');
     const [submitType, setSubmitType]=useState("Generate Certificate");
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
-    const isObjectEmpty = (objName) => {
-        console.log(objName.editData.status);
-        return JSON.stringify(objName) === "{}";
-    }
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
     // console.log(`editData: ${editData}`);
     // console.log(`editData2: ${isObjectEmpty(editData)}`);
 
@@ -276,19 +286,54 @@ function Generator(editData) {
             setlogo(editData.editData.Logo);
             setttd1(editData.editData.TTD1);
             setttd2(editData.editData.TTD2);
-            setCertID(editData.editData.ID);
+            setCurrID(editData.editData.ID);
             setTxId(editData.editData.txId);
         }
+    }
+
+    const nameCSVContain = [];
+    const imgCSVContain = [];
+
+    const bulkNameUpdate = () => {
+        setname(nameCSV);
+        // nameCSVContain.push(nameCSV);
+        // console.log(nameCSVContain);
+    }
+
+    const [imgCSVArray, setImgCSVArray] = useState([]);
+
+    const bulkImgUpdate = () => {
+        // console.log(imgCSV);
+        setImgSert(imgCSV);
+        if(imgCSV){
+            bulkImgArray(imgCSV);
+        }
+        // imgCSVContain.push(imgCSV);
+        // console.log(imgCSV);
+        // console.log(imgCSVArray);
+    }
+    
+    const bulkImgArray = (object) => {
+        setImgCSVArray(prevArray => [...prevArray, object]);
     }
 
     useEffect(() => {
         dispatch(getMe());
         checkData();
+        _generateRandomID();
       }, [dispatch]);
 
     useEffect(() => {
         checkData();
     }, [editData]);
+
+    useEffect(() => {
+        bulkNameUpdate();
+    }, [nameCSV]);
+
+    useEffect(() => {
+        bulkImgUpdate();
+    }, [imgCSV]);
 
     useEffect(() => {
         handleConvert();
@@ -356,12 +401,14 @@ function Generator(editData) {
     const downloadRef = useRef();
 
     const handleConvert = () => {
+        let image = "";
         const targetEl = downloadRef.current;
         domtoimage.toJpeg(targetEl, { quality: 0.95 }).then((dataUrl) => {
             // console.log(dataUrl);
+            image = dataUrl;
             setImgSert(dataUrl);
         });
-        // return dataOut;
+        return image;
         // console.log(ttd1);
         // console.log(ttd2);
         //console.log(targetEl);
@@ -414,7 +461,7 @@ function Generator(editData) {
         await _generateRandomID();
         const gmbr = handleConvert();
         // console.log(certID);
-        if(certID ){
+        if(certID){
             try {
                 await axios.post("http://172.16.10.53:4000/channels/mychannel/chaincodes/basic", {
                     fcn: "CreateAsset",
@@ -445,6 +492,7 @@ function Generator(editData) {
                     },
                 }
                 );
+                navigate('/');
                 } catch (error) {
                     if(error.response){
                         setMsg(error.response.data.msg)
@@ -461,7 +509,7 @@ function Generator(editData) {
                 chaincodeName: "basic",
                 channelName: "mychannel",
                 args: [
-                    certID,
+                    currID,
                     logo,
                     heading,
                     user.name,
@@ -484,6 +532,7 @@ function Generator(editData) {
                 },
             }
             );
+            navigate('/');
             } catch (error) {
                 if(error.response){
                     setMsg(error.response.data.msg)
@@ -494,19 +543,148 @@ function Generator(editData) {
     const postSelector = () => {
         if(submitType === "Generate Certificate"){
             handleUpload();
-            navigate('/');
+            setOpen(false);
             // handleCheck();
         }
         else if(submitType === "Update Certificate"){
             handleUpdate();
-            navigate('/');
+            setOpen(false);
             // handleCheck();
+        }
+        else if(submitType === "Generate Bulk Certificate"){
+            uploadBulk();
+            setOpen(false);
         }
     }
 
-    const handleConfirm = () => {
+    let file = null;
 
+    const handleChangeCSV = ({target: {files}}) => {
+        file = files[0];
     }
+
+    const importCSV2 = async () => {
+        setSubmitType("Generate Bulk Certificate");
+        let updates = [];
+        console.log(file, "file");
+        Papa.parse(file, {
+            delimiter: "",
+            chunkSize: 3,
+            header: false,
+            complete: (responses) => {
+                pushCSV(responses.data);
+            }
+        })
+    }
+
+    const [arrayCSV, setArrayCSV] = useState([]);
+
+    const pushCSV = async (nama) => {
+        let loopID = certID;
+        for(let i=1; i < (nama.length - 1); i++){
+            await new Promise((resolve) => {
+                setTimeout(() => {
+                    setNameCSV(nama[i][0]);
+                    // console.log(nameCSV);
+                    resolve();
+                }, 2000 * i)
+            })
+
+            await new Promise((resolve) => {
+                let prefix = "";
+                let length = 10;
+                let ID = prefix + Math.random().toString(36).substring(2, length);
+                loopID = ID.toString();
+                setCertID(loopID);
+                // console.log(arrayCSV);
+                resolve();
+            }, 2000 * i)
+
+            await new Promise((resolve) => {
+                setTimeout(() => {
+                    const targetImg = downloadRef.current;
+                    domtoimage.toJpeg(targetImg, { quality: 0.95 }).then((dataUrl) => {
+                        // console.log(dataUrl);
+                        // loopImg = dataUrl;
+                        setImgCSV(dataUrl);
+                    });
+                    resolve();
+                }, 2000 * i)
+            })
+
+            await new Promise((resolve) => {
+                setTimeout(() => {
+                    const dataCSV = {
+                        certID: loopID,
+                        logo: logo,
+                        heading: heading,
+                        username: user.name,
+                        name: nama[i][0],
+                        perihal: "Webinar",
+                        desc: desc,
+                        author_a: author_a,
+                        author1: author1,
+                        ttd1: ttd1,
+                        author_b: author_b,
+                        author2: author2,
+                        ttd2: ttd2,
+                        imgSert: imgSert
+                    }
+                    setArrayCSV(prevArray => [...prevArray, dataCSV])
+                    resolve();
+                }, 2000 * i)
+            })
+        }
+    }
+
+    const uploadBulk = async () => {
+    // console.log(arrayCSV.length);
+    // console.log(imgCSVArray);
+     for(let i=0; i < arrayCSV.length; i++){
+        console.log(arrayCSV[i]['certID']);
+        await new Promise((resolve) => {
+            setTimeout(() => {
+                arrayCSV[i]['imgSert'] = imgCSVArray[i];
+                // console.log(imgCSVArray[i]);
+                axios.post("http://172.16.10.53:4000/channels/mychannel/chaincodes/basic", {
+                    fcn: "CreateAsset",
+                    peers: ["peer0.org1.example.com","peer0.org2.example.com"],
+                    chaincodeName: "basic",
+                    channelName: "mychannel",
+                    args: [
+                        `${arrayCSV[i]['certID']}`,
+                        `${arrayCSV[i]['logo']}`,
+                        `${arrayCSV[i]['heading']}`,
+                        `${arrayCSV[i]['username']}`,
+                        `${arrayCSV[i]['name']}`,
+                        "Webinar",
+                        `${arrayCSV[i]['desc']}`,
+                        `${arrayCSV[i]['author_a']}`,
+                        `${arrayCSV[i]['author1']}`,
+                        `${arrayCSV[i]['ttd1']}`,
+                        `${arrayCSV[i]['author_b']}`,
+                        `${arrayCSV[i]['author2']}`,
+                        `${arrayCSV[i]['ttd2']}`,
+                        `${arrayCSV[i]['imgSert']}`
+                        ]
+                    }
+                        ,{
+                            withCredentials: false,
+                            headers: {
+                                Authorization: `Bearer ${getCookie("myCookie")}`
+                            },
+                        }
+                    );
+                resolve();
+            }, 5000 * i)
+        })
+     }
+    }
+    
+    const delay = (ms) => new Promise(
+        resolve => setTimeout(resolve, ms),
+        console.log("delaying........")
+    );
 
     return (
         <div className="main" style={{background: (theme == "dark")?"#EEEEEE":"white"}}>
@@ -563,6 +741,14 @@ function Generator(editData) {
                             <span className="details" style={{color: 'black'}}>Author2 Name</span>
                             <input type="text" value={author2} placeholder="Enter Author2 Name" onChange={e => setauthor2(e.target.value)} />
                         </div>
+
+                        <div >
+                            <span className="details" style={{color: 'black'}}>Bulk Input</span>
+                            <br style={{height:"10px"}}></br>
+                            <input className='filetype' type='file' onChange={handleChangeCSV} accept='.csv, .xlsx' style={{color:'black'}}/>
+                            <button onClick={importCSV2}>Confirm Bulk</button>
+                        </div>
+
                         <div >
                             <span className="details" style={{color: 'black'}}>Logo</span>
                             <br style={{height:"10px"}}></br>
@@ -581,7 +767,28 @@ function Generator(editData) {
                             <input className='filetype' type='file' onChange={ttd2Change} accept='.jpg, .png, .jpeg, .bmp|image/*' style={{color: 'black'}}/>
                         {/* {qrrr() } */}
                         </div>
-                        <button className="generate" onClick={() => postSelector()}>{submitType}</button>
+                        <button className="generate" onClick={handleClickOpen}>{submitType}</button>
+                        <Dialog
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                        >
+                            <DialogTitle id="alert-dialog-title">
+                            {"Konfirmasi"}
+                            </DialogTitle>
+                            <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                Pastikan data yang diisi sudah benar sebelum upload!
+                            </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                            <Button onClick={handleClose}>Keluar</Button>
+                            <Button onClick={() => postSelector()} autoFocus>
+                                Benar
+                            </Button>
+                            </DialogActions>
+                        </Dialog>
                         {/* <button className="generate" onChange={checkBulk}>Check CSV</button> */}
                         {/* <ReactToPrint
                             trigger={() => <button className="generate" >Print this out!</button>}
