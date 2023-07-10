@@ -40,7 +40,63 @@ export function Home() {
   const { user } = useSelector((state) => state.auth);
   const { blockchainUser } = useSelector((state) => state.auth);
   const currentState = store.getState();
-  
+  const [infoText, setInfoText] = useState("");
+  const [result, setResult] = useState("");
+  const [fileUrl, setFileUrl] = useState("");
+  const [isActive, setIsActive] = useState(false);
+
+  const fetchRequest = (file, formData) => {
+    fetch("http://api.qrserver.com/v1/read-qr-code/", {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        result = result[0].symbol[0].data;
+        if (!result) {alert("Pembacaan Gagal! Harap cek format file");return};
+        setResult(result);
+        setFileUrl(URL.createObjectURL(file));
+        setIsActive(true);
+        if (result!=''){
+          navigate('/verify',{state:{hasil:{result}}});
+        }
+      })
+      .catch(() => {
+        alert("Couldn't scan QR Code");
+      });
+  };
+
+  const handleFileChange = async (a) => {
+    let file = a.target.files[0];
+    if (!file) return;
+    let formData = new FormData();
+    formData.append("file", file);
+    fetchRequest(file, formData);
+    // navigate('/verify',{state:{result}});
+    // await("500ms")
+    // console.log(result);
+    // if (result!=''){
+    //   navigate('/verify',{state:{hasil:{result}}});
+    // }
+    
+  };
+
+  // const test =()=>{
+  //   if (result!='') {
+  //     navigate('/verify',{state:{hasil:result}});
+  //   }
+  //   else {
+  //     console.log(result);
+  //   }
+  // }
+
+  const gabung =()=>{
+    handleFileChange();
+    if (result!=='') {
+      test();
+    }
+  }
+
   useEffect(() => {
     dispatch(getMe());
     getAsset();
