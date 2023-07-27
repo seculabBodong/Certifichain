@@ -20,8 +20,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Papa from 'papaparse'
-
+import Papa from 'papaparse';
 const value="this is placeeeeholder";
 
 export class ComponentToPrint extends React.PureComponent {
@@ -63,7 +62,7 @@ export class ComponentToPrint extends React.PureComponent {
                         </div>
                         </div>
                         {this.props.logo === '' ? "" : <img src={this.props.logo} style={{ position: 'absolute', width: '4rem', borderRadius: '0%', top: '5%', right: '5%' }} alt="logo" />}
-                        <QRCodeCanvas className='QR' style={{ position: 'absolute', borderRadius: '0%', top: '70%', left: '42.5%' }} value={`http://172.16.10.53:3000/verify?id=["${this.props.certID}"]`}/>
+                        <QRCodeCanvas className='QR' style={{ position: 'absolute', borderRadius: '0%', top: '70%', left: '42.5%' }} value={`http://certifichain.seculab.space/verify?id=["${this.props.certID}"]`}/>
                         {/* <p style={{ position: 'absolute', borderRadius: '0%', top: '95%', left: '50%', fontSize: '15px', color: 'black' }}>ID={this.props.certID === '' ? '' : this.props.certID}</p> */}
                     </div>
                 );
@@ -101,8 +100,8 @@ export class ComponentToPrint extends React.PureComponent {
                         </div>
                         </div>
                         {this.props.logo === '' ? "" : <img src={this.props.logo} style={{ position: 'absolute', width: '4rem', borderRadius: '0%', top: '5%', right: '5%' }} alt="logo" />}
-                        <QRCodeCanvas className='QR' style={{ position: 'absolute', borderRadius: '0%', top: '70%', left: '42.5%' }} value={`http://172.16.10.53:3000/verify?id=["${this.props.certID}"]`}/>
-                        <p style={{ position: 'absolute', borderRadius: '0%', top: '95%', left: '50%', fontSize: '15px', color: 'black' }}>ID={this.props.certID === '' ? '' : this.props.certID}</p>
+                        <QRCodeCanvas className='QR' style={{ position: 'absolute', borderRadius: '0%', top: '70%', left: '42.5%' }} value={`https://certifichain.seculab.space/verify?id=["${this.props.certID}"]`}/>
+                        {/* <p style={{ position: 'absolute', borderRadius: '0%', top: '95%', left: '50%', fontSize: '15px', color: 'black' }}>ID={this.props.certID === '' ? '' : this.props.certID}</p> */}
                     </div>
                 );
             }
@@ -140,8 +139,8 @@ export class ComponentToPrint extends React.PureComponent {
                         </div>
                         </div>
                         {this.props.logo === '' ? "" : <img src={this.props.logo} style={{ position: 'absolute', width: '4rem', borderRadius: '0%', top: '5%', right: '5%' }} alt="logo" />}
-                        <QRCodeCanvas className='QR' style={{ position: 'absolute', borderRadius: '0%', top: '70%', left: '42.5%' }} value={`http://172.16.10.53:3000/verify?id=["${this.props.certID}"]`}/>
-                        <p style={{ position: 'absolute', borderRadius: '0%', top: '95%', left: '50%', fontSize: '15px', color: 'black' }}>ID={this.props.certID === '' ? '' : this.props.certID}</p>
+                        <QRCodeCanvas className='QR' style={{ position: 'absolute', borderRadius: '0%', top: '70%', left: '42.5%' }} value={`http://certifichain.seculab.space/verify?id=["${this.props.certID}"]`}/>
+                        {/* <p style={{ position: 'absolute', borderRadius: '0%', top: '95%', left: '50%', fontSize: '15px', color: 'black' }}>ID={this.props.certID === '' ? '' : this.props.certID}</p> */}
                     </div>
                 );
             }
@@ -178,8 +177,8 @@ export class ComponentToPrint extends React.PureComponent {
                         </div>
                         </div>
                         {this.props.logo === '' ? "" : <img src={this.props.logo} style={{ position: 'absolute', width: '4rem', borderRadius: '0%', top: '5%', right: '5%' }} alt="logo" />}
-                        <QRCodeCanvas className='QR' style={{ position: 'absolute', borderRadius: '0%', top: '70%', left: '42.5%' }} value={`http://172.16.10.53:3000/verify?id=["${this.props.certID}"]`}/>
-                        <p style={{ position: 'absolute', borderRadius: '0%', top: '95%', left: '50%', fontSize: '15px', color: 'black' }}>ID={this.props.certID === '' ? '' : this.props.certID}</p>
+                        <QRCodeCanvas className='QR' style={{ position: 'absolute', borderRadius: '0%', top: '70%', left: '42.5%' }} value={`http://certifichain.seculab.space/verify?id=["${this.props.certID}"]`}/>
+                        {/* <p style={{ position: 'absolute', borderRadius: '0%', top: '95%', left: '50%', fontSize: '15px', color: 'black' }}>ID={this.props.certID === '' ? '' : this.props.certID}</p> */}
                     </div>
                 );
             }
@@ -287,6 +286,7 @@ function Generator(editData) {
             setttd1(editData.editData.TTD1);
             setttd2(editData.editData.TTD2);
             setCurrID(editData.editData.ID);
+            setCertID(editData.editData.ID);
             setTxId(editData.editData.txId);
         }
     }
@@ -463,7 +463,7 @@ function Generator(editData) {
         // console.log(certID);
         if(certID){
             try {
-                await axios.post("http://172.16.10.53:4000/channels/mychannel/chaincodes/basic", {
+                await axios.post("https://hyperledger.seculab.space/channels/mychannel/chaincodes/basic", {
                     fcn: "CreateAsset",
                     peers: ["peer0.org1.example.com","peer0.org2.example.com"],
                     chaincodeName: "basic",
@@ -502,9 +502,10 @@ function Generator(editData) {
     }
 
     const handleUpdate = async (e) => {
+        setCertID(certID);
         const gmbr = handleConvert();
         try {
-            await axios.put("http://172.16.10.53:4000/channels/mychannel/chaincodes/basic", {
+            await axios.put("https://hyperledger.seculab.space/channels/mychannel/chaincodes/basic", {
                 peers: ["peer0.org1.example.com","peer0.org2.example.com"],
                 chaincodeName: "basic",
                 channelName: "mychannel",
@@ -646,7 +647,7 @@ function Generator(editData) {
             setTimeout(() => {
                 arrayCSV[i]['imgSert'] = imgCSVArray[i];
                 // console.log(imgCSVArray[i]);
-                axios.post("http://172.16.10.53:4000/channels/mychannel/chaincodes/basic", {
+                axios.post("https://hyperledger.seculab.space/channels/mychannel/chaincodes/basic", {
                     fcn: "CreateAsset",
                     peers: ["peer0.org1.example.com","peer0.org2.example.com"],
                     chaincodeName: "basic",
@@ -718,27 +719,30 @@ function Generator(editData) {
                             <input type="text" value={heading} placeholder='Enter Heading' onChange={e => { setheading(e.target.value) }} />
                         </div>
                         <div className="input-box">
-                            <span className="details" style={{color: 'black'}}>Particpant Name</span>
-                            <input className='Nama_psrt' value={name} placeholder="Enter Participant Name" type="text" onChange={handleChange} maxLength={18} />
+                            {/* <div className='input-name'> */}
+                                {/* <input type='radio' style={{width:30}}/> */}
+                                <span className="details" style={{color: 'black'}}>Particpant Name</span>
+                                <input className='Nama_psrt' value={name} placeholder="Enter Participant Name" type="text" onChange={handleChange} maxLength={18} />
+                            {/* </div> */}
                         </div>
                         <div className="input-box">
-                            <span className="details" style={{color: 'black'}}>Description</span>
+                            <span className="details" style={{color: 'black'}}>Description</span>        
                             <textarea type="text" value={desc} placeholder="Enter Description" onChange={e => setdesc(e.target.value)} maxLength={155}/>
                         </div>
                         <div className="input-box">
-                            <span className="details" style={{color: 'black'}}>Author Posisistion</span>
-                            <input type="text" value={author_a} placeholder="Enter Author Posisition" onChange={e => setauthor_a(e.target.value)} />
+                            <span className="details" style={{color: 'black'}}>Author Position</span>
+                            <input type="text" value={author_a} placeholder="Enter Author Position" onChange={e => setauthor_a(e.target.value)} />
                         </div>
                         <div className="input-box">
                             <span className="details" style={{color: 'black'}}>Author Name</span>
                             <input type="text" value={author1} placeholder="Enter Author Name" onChange={e => setauthor1(e.target.value)} />
                         </div>
                         <div className="input-box">
-                            <span className="details" style={{color: 'black'}}>Author Posisistion</span>
-                            <input type="text" value={author_b} placeholder="Enter Author Posisition" onChange={e => setauthor_b(e.target.value)} />
+                            <span className="details" style={{color: 'black'}}>Author Position</span>
+                            <input type="text" value={author_b} placeholder="Enter Author Position" onChange={e => setauthor_b(e.target.value)} />
                         </div>
                         <div className="input-box">
-                            <span className="details" style={{color: 'black'}}>Author2 Name</span>
+                            <span className="details" style={{color: 'black'}}>Author 2 Name</span>
                             <input type="text" value={author2} placeholder="Enter Author2 Name" onChange={e => setauthor2(e.target.value)} />
                         </div>
 
@@ -747,6 +751,14 @@ function Generator(editData) {
                             <br style={{height:"10px"}}></br>
                             <input className='filetype' type='file' onChange={handleChangeCSV} accept='.csv, .xlsx' style={{color:'black'}}/>
                             <button onClick={importCSV2}>Confirm Bulk</button>
+                            <a
+                                href='/testname.csv'
+                                download='CSV Template'
+                                target='_blank'
+                                rel='noreferer'
+                            >
+                                <button>CSV Template</button>
+                            </a>
                         </div>
 
                         <div >

@@ -20,8 +20,10 @@ export function Login() {
       console.log(user);
       console.log(isSuccess);
       document.cookie = `myCookie=${blockchainUser.token}`;
-      // console.log(document.cookie);
-      navigate("/");
+      console.log(blockchainUser.token);
+      if(document.cookie){
+        navigate("/");
+      }
     }
     dispatch(reset());
   }, [user, isSuccess, dispatch, navigate, blockchainUser]);
@@ -95,7 +97,7 @@ export function Login() {
               <button type="submit" className="formFieldButton">
                 {isLoading ? "Loading..." : "Login"}
               </button>{" "}
-              <NavLink className="formFieldLink">Lupa password</NavLink>
+              {/* <NavLink className="formFieldLink">Lupa password</NavLink> */}
             </div>
           </form>
 

@@ -26,7 +26,7 @@ export function Signup() {
     e.preventDefault();
     try {
       await axios.post(
-        "http://172.16.10.53:4000/register",
+        "https://hyperledger.seculab.space/register",
         {
           username: email,
           orgName: "Org2"
@@ -50,14 +50,14 @@ export function Signup() {
     e.preventDefault();
     try {
       await axios.post(
-        "http://172.16.10.53:4000/register",
+        "https://hyperledger.seculab.space/register",
         {
           username: email,
           orgName: "Org2"
         }
       );
       await axios.post(
-        "http://172.16.10.53:5000/users", formDaftar,
+        "https://backend.seculab.space/users", formDaftar,
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -92,7 +92,7 @@ export function Signup() {
     e.preventDefault();
     try {
       await axios.post(
-        "http://172.16.10.53:5000/", formData,
+        "https://backend.seculab.space/", formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",

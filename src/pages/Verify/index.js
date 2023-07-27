@@ -27,6 +27,8 @@ export function Verify() {
   
   
   const location=useLocation();
+  const [params]=useSearchParams();
+  // console.log(params.get('id'))
   // var data = location.state.hasil;
   // data = `${data.result}`;
   // console.log(data)
@@ -57,14 +59,9 @@ export function Verify() {
       
       // if(!isStop){
       // const url = `http://172.16.10.53:4000/home?args=["zy621d33"]`;
-      console.log("ALHAMDULILAH");
-      var data = location.state.hasil; 
-      console.log(data) 
-      data = `${data.result}`; 
-      let url=new URL(data) 
-      const params=new URLSearchParams(url.search) 
+      console.log("ALHAMDULILAH");      
       try { const response = await axios.get( 
-      `http://172.16.10.53:4000/home?args=["${params.get('id').replace(/"/g,'').replace("[",'').replace("]",'')}"]`) 
+      `https://hyperledger.seculab.space/home?args=["${params.get('id').replace(/"/g,'').replace("[",'').replace("]",'')}"]`) 
       console.log(response.data); 
         // console.log(response.data);
         setCertificate(response.data); 
@@ -90,15 +87,11 @@ export function Verify() {
   const getHistory= async () => {
     // const url = `http://172.16.10.53:4000/home?args=["zy621d33"]`;
     console.log("ALHAMDULILAH");
-    var data = location.state.hasil; 
-    console.log(data) 
-    data = `${data.result}`; 
-    let url=new URL(data) 
-    const params=new URLSearchParams(url.search) 
     try { const response = await axios.get( 
-    `http://172.16.10.53:4000/history?args=["${params.get('id').replace(/"/g,'').replace("[",'').replace("]",'')}"]`) 
-    console.log(response.data); 
-      sethistory(response.data[response.data.length-1]); 
+    `https://hyperledger.seculab.space/history?args=["${params.get('id').replace(/"/g,'').replace("[",'').replace("]",'')}"]`) 
+    console.log(response.data);
+    const panjang = response.data.length ===1 ? 1:response.data.length-1
+      sethistory(response.data[response.data.length-panjang]); 
       // console.log(history);
       return response.data;
     } catch (error) {
@@ -111,9 +104,7 @@ export function Verify() {
 }
 
 
-  function timeout(ms){
-    return new Promise((resolve)=>setTimeout(resolve,ms));
-  }
+
   
   useEffect(() => {
     currentOption === "informasi" ? setInformasiTampil(true) : setInformasiTampil(false)
@@ -174,7 +165,7 @@ export function Verify() {
         checkmark : iconCheck,
       }))
     }
-    console.log('cek1')
+    // console.log('cek1')
   },[isLoading,certificate]);
 
   useEffect(()=>{
@@ -258,10 +249,6 @@ export function Verify() {
           <div className="display-cert">
             {/* {console.log(certificate.Certificate)} */}
             <img src={certificate.Certificate} className="display-cert-img"/>
-          </div>
-          <div className="scan-other">
-            Scan Lainnya
-            <img src={varrow} style={{width: 10, paddingLeft: 10}} />
           </div>
         </div>
       </div>

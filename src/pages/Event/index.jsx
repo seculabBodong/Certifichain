@@ -46,7 +46,7 @@ export function Event(){
         console.log("ALHAMDULILAH");
         try {
             const response = await axios.get(
-            `http://172.16.10.53:4000/dashboard?args=["${searchparams.get("org")}", "${searchparams.get("acara")}"]&peer=peer0.org1.example.com&fcn=AssetByAcara`,
+            `https://hyperledger.seculab.space/dashboard?args=["${searchparams.get("org")}", "${searchparams.get("acara")}"]&peer=peer0.org1.example.com&fcn=AssetByAcara`,
             {
                 withCredentials: false,
                 headers: {
@@ -71,7 +71,7 @@ export function Event(){
         console.log("ALHAMDULILAH");
         try {
             const response = await axios.delete(
-            `http://172.16.10.53:4000/channels/mychannel/chaincodes/basic`,
+            `https://hyperledger.seculab.space/channels/mychannel/chaincodes/basic`,
             {
                 withCredentials: false,
                 headers: {

@@ -46,7 +46,7 @@ export function Home() {
   const [isActive, setIsActive] = useState(false);
 
   const fetchRequest = (file, formData) => {
-    fetch("http://api.qrserver.com/v1/read-qr-code/", {
+    fetch("https://api.qrserver.com/v1/read-qr-code/", {
       method: "POST",
       body: formData,
     })
@@ -58,7 +58,10 @@ export function Home() {
         setFileUrl(URL.createObjectURL(file));
         setIsActive(true);
         if (result!=''){
-          navigate('/verify',{state:{hasil:{result}}});
+          let url=new URL(result) 
+          const params=new URLSearchParams(url.search) 
+          console.log(params.get('id'))
+          navigate("/verify?id="+params.get('id'),{state:{hasil:{result}}});
         }
       })
       .catch(() => {
@@ -128,7 +131,7 @@ export function Home() {
     console.log("ALHAMDULILAH");
     try {
       const response = await axios.get(
-        `http://172.16.10.53:4000/dashboard?args=["${orgname}"]&peer=peer0.org1.example.com&fcn=AssetByOrganisasi`,
+        `https://hyperledger.seculab.space/dashboard?args=["${orgname}"]&peer=peer0.org1.example.com&fcn=AssetByOrganisasi`,
         {
           withCredentials: false,
           headers: {
@@ -165,7 +168,7 @@ export function Home() {
   const getUser = async () => {
     console.log("MANTAP");
     try {
-      const response = await axios.get(`http://172.16.10.53:5000/users`);
+      const response = await axios.get(`https://backend.seculab.space/users`);
       // console.log(response.data);
       setUserList(response.data);
       const filterApprove = userList.filter(

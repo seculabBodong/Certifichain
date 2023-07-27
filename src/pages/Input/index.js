@@ -48,7 +48,7 @@ export function Input() {
   }
 
   const getEditData = async () => {
-    const url = `http://172.16.10.53:4000/home?args=["${ID}"]`;
+    const url = `https://hyperledger.seculab.space/home?args=["${ID}"]`;
     console.log("ALHAMDULILAH");
     try {
       const response = await axios.get(url);

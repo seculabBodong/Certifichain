@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 export async function getUser(){
     console.log("MANTAP");
     try {
-      const response = await axios.get(`http://172.16.10.53:5000/users`);
+      const response = await axios.get(`https://backend.seculab.space/users`);
       const userList = response.data;
       const filterApprove = userList.filter(
         (resp) => resp.status == "approved"
@@ -28,7 +28,7 @@ export async function getUser(){
 export async function handleApprove (uid){
     console.log("ALHAMDULILAH");
     try {
-      const response = await axios.patch(`http://172.16.10.53:5000/users/${uid}`,
+      const response = await axios.patch(`https://backend.seculab.space/users/${uid}`,
       {
         status: "approved"
       });
@@ -46,7 +46,7 @@ export async function handleApprove (uid){
     console.log("ALHAMDULILAH");
     try {
         if(uid !== currUid){
-            const response = await axios.patch(`http://172.16.10.53:5000/users/${uid}`,
+            const response = await axios.patch(`https://backend.seculab.space/users/${uid}`,
             {
                 status: "not_approved"
             });

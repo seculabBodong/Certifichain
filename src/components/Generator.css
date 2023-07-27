@@ -184,6 +184,10 @@
     font-weight: 500;
     font-family: inherit;
 }
+.input-name{
+  display: flex;
+  flex-direction: row;
+}
 .right .form{
     display: flex;
     flex-direction: column;
