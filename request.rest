@@ -10,8 +10,7 @@ Content-Type: application/json
     "role": "client",
     "status": "not_approved",
     "image": "defaultPP.png",
-    "url": "http://localhost:5000/images/defaultPP.png",
-    "urlDoc": "http://localhost:5000/images/Sertifikat.pdf"
+    "url": "http://localhost:5000/images/defaultPP.png"
 }
 
 ###
@@ -20,15 +19,14 @@ POST http://localhost:5000/users
 Content-Type: application/json
 
 {
-    "name": "Admin Dev",
+    "name": "org ",
     "email": "test_admin@gmail.com",
     "password": "123456",
     "confPassword": "123456",
     "role": "admin",
     "status": "approved",
     "image": "defaultPP.png",
-    "url": "http://localhost:5000/images/defaultPP.png",
-    "urlDoc": "http://localhost:5000/images/Sertifikat.pdf"
+    "url": "http://localhost:5000/images/defaultPP.png"
 }
 
 ###
@@ -37,7 +35,7 @@ GET http://localhost:5000/users
 
 ###
 //Get Single User
-GET http://localhost:5000/users/f6eee8fd-77c8-47a3-86a7-02e29b9ff9ec
+GET http://172.16.10.53:5000/users/f6eee8fd-77c8-47a3-86a7-02e29b9ff9ec
 
 ###
 //Update User
@@ -62,7 +60,7 @@ POST http://localhost:5000/login
 Content-Type: application/json
 
 {
-    "email": "admin@gmail.com",
+    "email": "test_admin@gmail.com",
     "password": "123456"
 }
 
@@ -117,10 +115,4 @@ Content-Type: application/json
 DELETE http://localhost:5000/products/7416ea8c-9121-4d10-8cf0-91243db66f5b
 
 ###
-// POST data upload
-POST http://localhost:5000/proof
-Content-Type: multipart/form-data
-
-{
-    "data": "10000",
-}
+GET http://localhost:4000/home?args=["random123"]

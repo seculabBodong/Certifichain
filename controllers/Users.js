@@ -61,7 +61,7 @@ export const createUser = async (req, res) => {
       role: role,
       status: "not_approved",
       image: "defaultPP.png",
-      url: "http://localhost:5000/images/defaultPP.png",
+      url: "http://172.16.10.53:5000/images/defaultPP.png",
       urlDoc: urlDoc
     });
     res.status(201).json({ msg: "Register Berhasil" });

@@ -38,7 +38,7 @@ app.use(
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", "http://localhost:4000"], //pake araay [] bila domain kita banyak
+    origin: ["http://localhost:3000", "http://localhost:4000", "http://172.16.10.53:4000", "http://172.16.10.53:3000", "https://certifichain.seculab.space", "https://hyperledger.seculab.space", "https://backend.seculab.space"], //pake araay [] bila domain kita banyak
   })
 );
 app.use(express.json()); //menerima data dalam format json
